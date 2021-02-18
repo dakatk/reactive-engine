@@ -80,7 +80,7 @@ function BigBrother (dataObj) {
 
             for (let nodeAttr of node.attributes) {
                 const nodeName = nodeAttr.nodeName;
-                const nodeValue = nodeAttr.nodeValue.replaceAll('${i}', i);
+                const nodeValue = nodeAttr.nodeValue.replace(/\${i}/g, i);
 
                 newNode.attributes[nodeName].nodeValue = nodeValue;
             }
