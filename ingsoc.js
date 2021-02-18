@@ -55,6 +55,8 @@ function BigBrother (dataObj) {
             let nodeValue = node.attributes[selector].value;
             let subProperties = nodeValue.split('.');
 
+            node.removeAttribute(selector);
+
             if (subProperties.length === 1) {
                 callback(observable, nodeValue, node, nodeProperty, nodeValue);
                 continue;
