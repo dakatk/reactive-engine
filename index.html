@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Reactive Engine Test</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="ingsoc.js"></script>
+        <script defer src="script.js"></script>
+    </head>
+
+    <body>
+        <h1 view-if="showTitle" watch-id="titleId" watch-class="titleClass" watch-text="title"></h1>
+        <input type="text" listen-input="title" watch-value="title" placeholder="Title...">
+
+        <button type="button" listen-click="switchClass">Swap Class</button>
+        <button type="button" listen-click="switchId">Swap ID</button>
+        <input type="checkbox" value="show" checked="true" listen-change="toggleTitle"> Show Title
+        <p interpolate-for="text" watch-html="text.${i}"></p>
+    </body>
+</html>
