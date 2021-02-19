@@ -1,7 +1,7 @@
 /*jshint globalstrict: true*/
 'use strict';
 
-function BigBrother (dataObj) {
+export function BigBrother (dataObj) {
 
     let signals = {};
     let removed = {};
