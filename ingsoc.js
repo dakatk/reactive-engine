@@ -1,7 +1,11 @@
+/*jshint globalstrict: true*/
+'use strict';
+
 function BigBrother (dataObj) {
+
     let signals = {};
     let removed = {};
-    
+
     watchData(dataObj.watchers);
     parseDOM(dataObj);
 
@@ -10,7 +14,7 @@ function BigBrother (dataObj) {
         watch,
         notify
     };
-    
+
     function watch (property, signalHandler) {
         if (!signals[property]) {
             signals[property] = [];
@@ -24,17 +28,16 @@ function BigBrother (dataObj) {
         }
         signals[signal].forEach((signalHandler) => signalHandler());
     }
-    
+
     function watchData (obj, prefix) {
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
                 let val = obj[key];
                 let keyPrefix = prefix === undefined ? key : `${prefix}.${key}`;
-                
+
                 if (val instanceof Object && prefix === undefined) {
                     watchData(val, keyPrefix);
                 }
-        
                 Object.defineProperty(obj, key, {
                     get () {
                         return val;
@@ -50,7 +53,7 @@ function BigBrother (dataObj) {
 
     function observeNodeAttr (selector, nodeProperty, observable, callback) {
         const nodes = document.body.querySelectorAll(`[${selector}]`);
-        
+
         for (const node of nodes) {
             let nodeValue = node.attributes[selector].value;
             let subProperties = nodeValue.split('.');
@@ -74,13 +77,15 @@ function BigBrother (dataObj) {
 
     function interpolateForNode (observable, observedProperty, node) {
         const parent = node.parentNode;
+        const observedObject = observable[observedProperty];
 
-        for (const i in observable[observedProperty]) {
-            var newNode = node.cloneNode(true);
+        for (const key in observedObject) {
+            let value = observedObject[key];
+            let newNode = node.cloneNode(true);
 
             for (let nodeAttr of node.attributes) {
                 const nodeName = nodeAttr.nodeName;
-                const nodeValue = nodeAttr.nodeValue.replace(/\${i}/g, i);
+                const nodeValue = nodeAttr.nodeValue.replace(/\$\{key\}/g, key).replace(/\$\{value\}/g, value);
 
                 newNode.attributes[nodeName].nodeValue = nodeValue;
             }
@@ -100,7 +105,7 @@ function BigBrother (dataObj) {
             const parent = node.parentNode;
             const index = Array.from(parent.children).indexOf(node);
 
-            removed[node] = {index, parent}
+            removed[node] = {index, parent};
             parent.removeChild(node);
         } 
         else {
@@ -118,7 +123,7 @@ function BigBrother (dataObj) {
 
     function watchNode (observable, observedProperty, node, nodeProperty, watchKey) {
         node[nodeProperty] = observable[observedProperty];
-        watch(watchKey, () => {node[nodeProperty] = observable[observedProperty]});
+        watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
     }
 
     function listenToNode (observable, observedProperty, node, eventName) {

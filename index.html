@@ -3,7 +3,7 @@
         <meta charset="UTF-8">
         <title>Reactive Engine Test</title>
         <link rel="stylesheet" href="style.css">
-        <script src="ingsoc.min.js"></script>
+        <script src="ingsoc.js"></script>
         <script defer src="script.js"></script>
     </head>
 
@@ -13,7 +13,15 @@
 
         <button type="button" listen-click="switchClass">Swap Class</button>
         <button type="button" listen-click="switchId">Swap ID</button>
+
         <input type="checkbox" value="show" checked="true" listen-change="toggleTitle"> Show Title
-        <p interpolate-for="text" watch-html="text.${i}"></p>
+
+        <p interpolate-for="text" watch-html="text.${key}"></p>
+
+        <select listen-change="updateText">
+            <option disabled value="">Pick one...</option>
+            <option value="Zero">Zero</option>
+            <option value="Three">Three</option>
+        </select>
     </body>
 </html>
