@@ -1,18 +1,19 @@
 /*jshint globalstrict: true*/
 'use strict';
 
-export function BigBrother (dataObj) {
+function BigBrother (dataObj) {
 
     let signals = {};
     let removed = {};
 
-    let dom = document.getElementById(dataObj.id);
-    dom = dom || document.body;
+    let parentEl = document.getElementById(dataObj.id);
+    parentEl = parentEl || document.body;
 
     watchData(dataObj.watchers);
     parseDOM(dataObj);
 
     return {
+        el: parentEl,
         data: dataObj,
         watch,
         notify
@@ -55,7 +56,7 @@ export function BigBrother (dataObj) {
     }
 
     function observeNodeAttr (selector, nodeProperty, observable, callback) {
-        const nodes = dom.querySelectorAll(`[${selector}]`);
+        const nodes = parentEl.querySelectorAll(`[${selector}]`);
 
         for (const node of nodes) {
             let nodeValue = node.attributes[selector].value;
