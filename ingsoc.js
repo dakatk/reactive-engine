@@ -6,6 +6,9 @@ function BigBrother (dataObj) {
     let signals = {};
     let removed = {};
 
+    let dom = document.getElementById(dataObj.id);
+    dom = dom || document.body;
+
     watchData(dataObj.watchers);
     parseDOM(dataObj);
 
@@ -26,14 +29,14 @@ function BigBrother (dataObj) {
         if (!signals[signal] || signals[signal].length < 1) {
             return;
         }
-        signals[signal].forEach((signalHandler) => signalHandler());
+        signals[signal].forEach((signalHandler) => signalHandler.call());
     }
 
     function watchData (obj, prefix) {
-        for (let key in obj) {
+        for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 let val = obj[key];
-                let keyPrefix = prefix === undefined ? key : `${prefix}.${key}`;
+                const keyPrefix = (prefix === undefined ? key : `${prefix}.${key}`);
 
                 if (val instanceof Object && prefix === undefined) {
                     watchData(val, keyPrefix);
@@ -52,7 +55,7 @@ function BigBrother (dataObj) {
     }
 
     function observeNodeAttr (selector, nodeProperty, observable, callback) {
-        const nodes = document.body.querySelectorAll(`[${selector}]`);
+        const nodes = dom.querySelectorAll(`[${selector}]`);
 
         for (const node of nodes) {
             let nodeValue = node.attributes[selector].value;
@@ -79,13 +82,16 @@ function BigBrother (dataObj) {
         const parent = node.parentNode;
         const observedObject = observable[observedProperty];
 
+        const keyRegex = /\$\{key\}/g;
+        const valueRegex = /\$\{value\}/g;
+
         for (const key in observedObject) {
             let value = observedObject[key];
             let newNode = node.cloneNode(true);
 
             for (let nodeAttr of node.attributes) {
                 const nodeName = nodeAttr.nodeName;
-                const nodeValue = nodeAttr.nodeValue.replace(/\$\{key\}/g, key).replace(/\$\{value\}/g, value);
+                const nodeValue = nodeAttr.nodeValue.replace(keyRegex, key).replace(valueRegex, value);
 
                 newNode.attributes[nodeName].nodeValue = nodeValue;
             }

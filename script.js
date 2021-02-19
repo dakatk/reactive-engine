@@ -1,4 +1,5 @@
 const App = new BigBrother({
+    id: 'main',
     watchers: {
         title: 'Title',
         titleClass: 'red',
