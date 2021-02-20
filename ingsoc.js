@@ -15,8 +15,7 @@ function BigBrother (dataObj) {
     return {
         el: parentEl,
         data: dataObj,
-        watch,
-        notify
+        watch
     };
 
     function watch (property, signalHandler) {

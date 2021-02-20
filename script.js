@@ -1,4 +1,4 @@
-function TitleComponent() {
+function MainComponent() {
     return new BigBrother({
         id: 'main',
         watchers: {
@@ -39,6 +39,6 @@ function SelectExampleComponent() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    TitleComponent();
+    MainComponent();
     SelectExampleComponent();
 });
