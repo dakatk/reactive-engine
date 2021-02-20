@@ -1,5 +1,5 @@
-window.onload = function () {
-    const Title = new BigBrother({
+function TitleComponent() {
+    return new BigBrother({
         id: 'main',
         watchers: {
             title: 'Title',
@@ -22,9 +22,11 @@ window.onload = function () {
             }
         }
     });
+}
 
-    const Multi = new BigBrother({
-        id: 'multi',
+function SelectExampleComponent() {
+    return new BigBrother({
+        id: 'select-example',
         watchers: {
             text: ['Zero', 'One', 'Two']
         },
@@ -34,4 +36,9 @@ window.onload = function () {
             }
         }
     });
-};
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    TitleComponent();
+    SelectExampleComponent();
+});
