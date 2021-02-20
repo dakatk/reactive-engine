@@ -41,6 +41,7 @@ function BigBrother (dataObj) {
                 if (val instanceof Object && prefix === undefined) {
                     watchData(val, keyPrefix);
                 }
+                /* jshint ignore:start */
                 Object.defineProperty(obj, key, {
                     get () {
                         return val;
@@ -50,6 +51,7 @@ function BigBrother (dataObj) {
                         notify(keyPrefix);
                     }
                 });
+                /* jshint ignore:end */
             }
         }
     }
