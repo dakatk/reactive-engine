@@ -1,7 +1,8 @@
-/*jshint globalstrict: true*/
+/* jshint globalstrict: true */
 'use strict';
 
-function BigBrother (dataObj) {
+// TODO class?
+export default function BigBrother (dataObj) {
 
     let signals = {};
     let removed = {};

@@ -1,3 +1,5 @@
+import BigBrother from './ingsoc.js';
+
 function MainComponent() {
     return new BigBrother({
         id: 'main',

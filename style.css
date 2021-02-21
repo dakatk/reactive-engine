@@ -1,7 +1,3 @@
-#main {
-    margin-top: -0.8em;
-}
-
 .red {
     color: red;
 }
@@ -12,8 +8,10 @@
 
 #bg-green {
     background-color: green;
+    margin-top: 0em;
 }
 
 #bg-yellow {
     background-color: yellow;
+    margin-top: 0em;
 }
