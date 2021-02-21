@@ -1,7 +1,6 @@
 /* jshint globalstrict: true */
 'use strict';
 
-// TODO class?
 export default function BigBrother (dataObj) {
 
     let signals = {};

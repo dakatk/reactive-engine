@@ -1,6 +1,6 @@
-import BigBrother from './ingsoc.js';
+import BigBrother from './ingsoc.es6.js';
 
-function MainComponent() {
+function MainComponent () {
     return new BigBrother({
         id: 'main',
         watchers: {
@@ -26,7 +26,7 @@ function MainComponent() {
     });
 }
 
-function SelectExampleComponent() {
+function SelectExampleComponent () {
     return new BigBrother({
         id: 'select-example',
         watchers: {
