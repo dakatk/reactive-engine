@@ -1,4 +1,4 @@
-import BigBrother from './ingsoc.js';
+import BigBrother from './lib/ingsoc.js';
 
 window.addEventListener('DOMContentLoaded', () => {
     const MainComponent = new BigBrother({
