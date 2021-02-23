@@ -1,7 +1,7 @@
-import BigBrother from './ingsoc.es6.js';
+import BigBrother from './ingsoc.js';
 
-function MainComponent () {
-    return new BigBrother({
+window.addEventListener('DOMContentLoaded', () => {
+    const MainComponent = new BigBrother({
         id: 'main',
         watchers: {
             title: 'Title',
@@ -24,10 +24,8 @@ function MainComponent () {
             }
         }
     });
-}
 
-function SelectExampleComponent () {
-    return new BigBrother({
+    const SelectExampleComponent = new BigBrother({
         id: 'select-example',
         watchers: {
             text: ['Zero', 'One', 'Two']
@@ -38,9 +36,4 @@ function SelectExampleComponent () {
             }
         }
     });
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    MainComponent();
-    SelectExampleComponent();
 });

@@ -1,8 +1,7 @@
 /* jshint globalstrict: true */
 'use strict';
 
-export default function BigBrother (dataObj) {
-
+export default function BigBrother (dataObj, cleanDOM) {
     let signals = {};
     let removed = {};
 
@@ -40,6 +39,7 @@ export default function BigBrother (dataObj) {
 
                 if (val instanceof Object && prefix === undefined) {
                     watchData(val, keyPrefix);
+                    continue;
                 }
                 /* jshint ignore:start */
                 Object.defineProperty(obj, key, {
@@ -63,14 +63,16 @@ export default function BigBrother (dataObj) {
             let nodeValue = node.attributes[selector].value;
             let subProperties = nodeValue.split('.');
 
-            node.removeAttribute(selector);
+            if (cleanDOM) {
+                node.removeAttribute(selector);
+            }
 
             if (subProperties.length === 1) {
                 callback(observable, nodeValue, node, nodeProperty, nodeValue);
                 continue;
             }
             let observedProperty = subProperties.shift();
-            let observedObject = {...observable};
+            let observedObject = Object.assign({}, observable);
 
             for (const subProperty of subProperties) {
                 observedObject = observedObject[observedProperty];
@@ -98,7 +100,10 @@ export default function BigBrother (dataObj) {
                 newNode.attributes[nodeName].nodeValue = nodeValue;
             }
             parent.insertBefore(newNode, node);
-            newNode.removeAttribute('interpolate-for');
+
+            if (cleanDOM) {
+                newNode.removeAttribute('interpolate-for');
+            }
         }
         parent.removeChild(node);
     }
