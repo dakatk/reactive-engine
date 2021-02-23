@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
             },
             switchId: function () {
                 const titleId = this.watchers.titleId;
-                this.watchers.titleId = (titleId === 'bg-green' ? 'bg-yellow' : 'bg-green');
+                this.watchers.titleId = (titleId === 'bg-cyan' ? 'bg-yellow' : 'bg-cyan');
             },
             toggleTitle: function (event) {
                 const showTitle = event.target.checked;
