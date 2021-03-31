@@ -1,6 +1,3 @@
-/* jshint globalstrict: true */
-'use strict';
-
 export default function BigBrother (dataObj, cleanDOM) {
     let signals = {};
     let removed = {};
@@ -8,13 +5,15 @@ export default function BigBrother (dataObj, cleanDOM) {
     let parentEl = document.getElementById(dataObj.id);
     parentEl = parentEl || document.body;
 
-    watchData(dataObj.watchers);
-    parseDOM(dataObj);
+    function load () {
+        watchData(dataObj.watchers);
+        parseDOM(dataObj);
+    }
 
     return {
         el: parentEl,
         data: dataObj,
-        watch
+        load
     };
 
     function watch (property, signalHandler) {
@@ -41,7 +40,6 @@ export default function BigBrother (dataObj, cleanDOM) {
                     watchData(val, keyPrefix);
                     continue;
                 }
-                /* jshint ignore:start */
                 Object.defineProperty(obj, key, {
                     get () {
                         return val;
@@ -51,7 +49,6 @@ export default function BigBrother (dataObj, cleanDOM) {
                         notify(keyPrefix);
                     }
                 });
-                /* jshint ignore:end */
             }
         }
     }
@@ -90,10 +87,10 @@ export default function BigBrother (dataObj, cleanDOM) {
         const valueRegex = /\$\{value\}/g;
 
         for (const key in observedObject) {
-            let value = observedObject[key];
-            let newNode = node.cloneNode(true);
+            const value = observedObject[key];
+            const newNode = node.cloneNode(true);
 
-            for (let nodeAttr of node.attributes) {
+            for (const nodeAttr of node.attributes) {
                 const nodeName = nodeAttr.nodeName;
                 const nodeValue = nodeAttr.nodeValue.replace(keyRegex, key).replace(valueRegex, value);
 

@@ -1,0 +1,36 @@
+{
+  "name": "reactivelib",
+  "version": "1.0.0",
+  "description": "ingsoc.js test",
+  "private": true,
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "webpack",
+    "serve:dev": "webpack serve --mode development",
+    "serve:prod": "webpack serve --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dakatk/reactive-engine.git"
+  },
+  "keywords": [
+    "ingsoc",
+    "react",
+    "orwell"
+  ],
+  "author": "Dusten Knull",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dakatk/reactive-engine/issues"
+  },
+  "homepage": "https://github.com/dakatk/reactive-engine#readme",
+  "devDependencies": {
+    "css-loader": "^5.2.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
