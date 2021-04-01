@@ -7,9 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "webpack",
-    "serve:dev": "webpack serve --mode development",
-    "serve:prod": "webpack serve --mode production"
+    "build": "webpack --mode production",
+    "serve": "webpack serve"
   },
   "repository": {
     "type": "git",
