@@ -1,4 +1,8 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const distDir = path.resolve(__dirname, 'dist');
+const srcDir = path.resolve(__dirname, 'src');
 
 module.exports = {
     entry: './src/app.js',
@@ -7,7 +11,7 @@ module.exports = {
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: distDir,
     },
     module: {
         rules: [
@@ -15,6 +19,11 @@ module.exports = {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
             },
+            {
+                test: /\.(jpg|jpeg|gif|png|ico)$/,
+                exclude: /node_modules/,
+                use: 'file-loader?name=[name].[ext]'
+             }
         ],
     },
 };

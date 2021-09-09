@@ -1,7 +1,7 @@
 import BigBrother from '../lib/ingsoc';
 
 const MainComponent = new BigBrother({
-    id: 'main',
+    id: 'main-component',
     watchers: {
         title: 'Title',
         titleClass: 'red',

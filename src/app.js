@@ -1,6 +1,10 @@
+import '../css/style.css';
+import '../static/favicon.ico';
+
 import MainComponent from './components/main.component';
-import SelectExampleComponent from './components/selectexample.component';
-import '../css/style.css'
+import SelectComponent from './components/select.component';
+import DateComponent from './components/date.component';
 
 MainComponent.load();
-SelectExampleComponent.load();
+SelectComponent.load();
+DateComponent.load();

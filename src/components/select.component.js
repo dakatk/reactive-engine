@@ -1,7 +1,7 @@
 import BigBrother from '../lib/ingsoc';
 
-const SelectExampleComponent = BigBrother({
-    id: 'select-example',
+const SelectComponent = new BigBrother({
+    id: 'select-component',
     watchers: {
         text: ['Zero', 'One', 'Two']
     },
@@ -12,4 +12,4 @@ const SelectExampleComponent = BigBrother({
     }
 }, true);
 
-export default SelectExampleComponent;
+export default SelectComponent;
