@@ -1,15 +1,15 @@
-import BigBrother from '../lib/ingsoc';
+import PartyMember from '../lib/partyMember';
 
-const SelectComponent = new BigBrother({
-    id: 'select-component',
-    watchers: {
+const SelectComponent = new PartyMember(
+    'select-component',
+    {
         text: ['Zero', 'One', 'Two']
     },
-    listeners: {
+    {
         updateText: function (event) {
             this.watchers.text[0] = event.target.value;
         }
-    }
-}, true);
+    },
+    true);
 
 export default SelectComponent;

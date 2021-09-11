@@ -6,30 +6,34 @@
     </head>
 
     <body>
-        <div id="main-component">
-            <h1 view-if="showTitle" watch-id="titleId" watch-class="titleClass" watch-text="title"></h1>
-            <input id="first" type="text" listen-input="title" watch-value="title" placeholder="Title...">
-
-            <button type="button" listen-click="switchClass">Swap Class</button>
-            <button type="button" listen-click="switchId">Swap ID</button>
-
-            <input type="checkbox" checked="true" listen-change="toggleTitle"> Show Title
-        </div>
-
-        <div id="select-component">
-            <p interpolate-for="text" watch-text="text.${key}"></p>
-
-            <select listen-change="updateText">
-                <option selected value="Zero">Zero</option>
-                <option value="Three">Three</option>
-            </select>
-        </div>
-
-        <br />
-
-        <div id="date-component">
-            <input type="date" placeholder="Date..." listen-change="date" watch-value="date">
-            <p watch-html="date"></p>
-        </div>
+        <div id="test"></div>
+        <main-component class="bottom-space"></main-component>
+        <main-component></main-component>
+        <select-component class="bottom-space"></select-component>
+        <date-component></date-component>
     </body>
+
+    <template id="main-component">
+        <h1 view-if="showTitle" watch-id="titleId" watch-class="titleClass" watch-text="title" style="margin-bottom: 0.1em;"></h1>
+        <input id="first" type="text" listen-input="title" watch-value="title" placeholder="Title...">
+
+        <button type="button" listen-click="switchClass">Swap Class</button>
+        <button type="button" listen-click="switchId">Swap ID</button>
+
+        <input type="checkbox" checked="true" listen-change="toggleTitle"> Show Title
+    </template>
+
+    <template id="select-component">
+        <p interpolate-for="text" watch-text="text.${key}"></p>
+
+        <select listen-change="updateText">
+            <option selected value="Zero">Zero</option>
+            <option value="Three">Three</option>
+        </select>
+    </template>
+
+    <template id="date-component">
+        <input type="date" placeholder="Date..." listen-change="date" watch-value="date">
+        <p watch-html="date"></p>
+    </template>
 </html>

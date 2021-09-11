@@ -1,11 +1,10 @@
-import BigBrother from '../lib/ingsoc';
+import PartyMember from '../lib/partyMember';
 
-const DateComponent = new BigBrother({
-    id: 'date-component',
-    watchers: {
+const DateComponent = new PartyMember(
+    'date-component',
+    {
         date: "2021-01-01"
-    },
-    listeners: {}
-});
+    }, 
+    {});
 
 export default DateComponent;

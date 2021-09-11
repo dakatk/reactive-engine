@@ -1,14 +1,14 @@
-import BigBrother from '../lib/ingsoc';
+import PartyMember from '../lib/partyMember';
 
-const MainComponent = new BigBrother({
-    id: 'main-component',
-    watchers: {
+const MainComponent = new PartyMember(
+    'main-component',
+    {
         title: 'Title',
         titleClass: 'red',
         titleId: 'bg-yellow',
         showTitle: true,
     },
-    listeners: {
+    {
         switchClass: function () {
             const titleClass = this.watchers.titleClass;
             this.watchers.titleClass = (titleClass === 'red' ? 'blue' : 'red');
@@ -21,7 +21,6 @@ const MainComponent = new BigBrother({
             const showTitle = event.target.checked;
             this.watchers.showTitle = showTitle;
         }
-    }
-}, true);
+    }, true);
 
 export default MainComponent;
