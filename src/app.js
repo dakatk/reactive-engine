@@ -1,5 +1,5 @@
 import '../css/style.css';
-import '../static/favicon.ico';
+import '../static/favicon.jpg';
 
 import MainComponent from './components/main.component';
 import SelectComponent from './components/select.component';

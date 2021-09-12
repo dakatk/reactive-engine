@@ -1,18 +1,18 @@
-import customProps from './customProps.json';
-import callbacks from './callbacks';
+import customProps from './custom-props.json';
+import callbacks from './watcher-callbacks';
 
 function Watcher (partyMember) {
     this.id = partyMember.id;
-    this.cleanDOM = partyMember.cleanDOM;
+    this.cleanDOM = partyMember.cleanDOM ?? false;
     this.data = partyMember.clone();
 
     this.signals = {};
     this.removed = {};
 }
 
-Watcher.prototype.setup = function (el) {
-    this.connectWatchers(this.data.watchers);
-    this.parseDOM(el, this.data);
+Watcher.prototype.setup = function (parentEl) {
+    connectWatchers.call(this, this.data.watchers);
+    parseDOM.call(this, parentEl, this.data);
 }
 
 Watcher.prototype.watch = function (property, signalHandler) {
@@ -50,7 +50,7 @@ Watcher.prototype.remove = function (observable, observedProperty, node) {
     }
 }
 
-Watcher.prototype.connectWatchers = function (obj, prefix) {
+function connectWatchers (obj, prefix) {
     const self = this;
 
     for (const key in obj) {
@@ -59,7 +59,7 @@ Watcher.prototype.connectWatchers = function (obj, prefix) {
             const keyPrefix = (prefix === undefined ? key : `${prefix}.${key}`);
 
             if (val instanceof Object && prefix === undefined) {
-                this.connectWatchers(val, keyPrefix);
+                connectWatchers.call(self, val, keyPrefix);
                 continue;
             }
             Object.defineProperty(obj, key, {
@@ -75,8 +75,26 @@ Watcher.prototype.connectWatchers = function (obj, prefix) {
     }
 }
 
-Watcher.prototype.observeNodeAttr = function (el, selector, nodeProperty, observable, callback) {
-    const nodes = el.querySelectorAll(`[${selector}]`);
+function parseDOM (parentEl, data) {
+    for (const propName in customProps) {
+        const propData = customProps[propName];
+        const callback = callbacks[propData.callback];
+
+        const childName = propData.child;
+        const childObj = childName !== undefined ? data[childName] : data;
+
+        if (Array.isArray(propData.existingProperty)) {
+            for (const existingProp of propData.existingProperty) {
+                observeNodeAttr.call(this, parentEl, propName, existingProp, childObj, callback);
+            }
+            continue;
+        }
+        observeNodeAttr.call(this, parentEl, propName, propData.existingProperty, childObj, callback);
+    }
+}
+
+function observeNodeAttr (parentEl, selector, nodeProperty, observable, callback) {
+    const nodes = parentEl.querySelectorAll(`[${selector}]`);
 
     for (const node of nodes) {
         const nodeValue = node.attributes[selector].value;
@@ -87,7 +105,7 @@ Watcher.prototype.observeNodeAttr = function (el, selector, nodeProperty, observ
         }
 
         if (subProperties.length === 1) {
-            callback.call(this, observable, nodeValue, node, nodeProperty, nodeValue);
+            callback(this, observable, nodeValue, node, nodeProperty, nodeValue);
             continue;
         }
         let observedProperty = subProperties.shift();
@@ -97,25 +115,7 @@ Watcher.prototype.observeNodeAttr = function (el, selector, nodeProperty, observ
             observedObject = observedObject[observedProperty];
             observedProperty = subProperty;
         }
-        callback.call(this, observedObject, observedProperty, node, nodeProperty, nodeValue);
-    }
-}
-
-Watcher.prototype.parseDOM = function (el, data) {
-    for (const propName in customProps) {
-        const propData = customProps[propName];
-        const callback = callbacks[propData.callback];
-
-        const childName = propData.child;
-        const childObj = childName !== undefined ? data[childName] : data;
-
-        if (Array.isArray(propData.existingProperty)) {
-            for (const existingProp of propData.existingProperty) {
-                this.observeNodeAttr(el, propName, existingProp, childObj, callback);
-            }
-            continue;
-        }
-        this.observeNodeAttr(el, propName, propData.existingProperty, childObj, callback);
+        callback(this, observedObject, observedProperty, node, nodeProperty, nodeValue);
     }
 }
 

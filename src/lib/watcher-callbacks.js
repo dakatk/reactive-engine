@@ -1,5 +1,5 @@
 
-function interpolateForNode (observable, observedProperty, node) {
+function interpolateForNode (watcher, observable, observedProperty, node) {
     const parent = node.parentNode;
     const observedObject = observable[observedProperty];
 
@@ -18,24 +18,24 @@ function interpolateForNode (observable, observedProperty, node) {
         }
         parent.insertBefore(newNode, node);
 
-        if (this.cleanDOM) {
+        if (watcher.cleanDOM) {
             newNode.removeAttribute('interpolate-for');
         }
     }
     parent.removeChild(node);
 }
 
-function viewIfNode (observable, observedProperty, node, _, watchKey) {
-    this.remove(observable, observedProperty, node);
-    this.watch(watchKey, () => this.remove(observable, observedProperty, node));
+function viewIfNode (watcher, observable, observedProperty, node, _, watchKey) {
+    watcher.remove(observable, observedProperty, node);
+    watcher.watch(watchKey, () => watcher.remove(observable, observedProperty, node));
 }
 
-function watchNode (observable, observedProperty, node, nodeProperty, watchKey) {
+function watchNode (watcher, observable, observedProperty, node, nodeProperty, watchKey) {
     node[nodeProperty] = observable[observedProperty];
-    this.watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
+    watcher.watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
 }
 
-function listenToNode (observable, observedProperty, node, eventName) {
+function listenToNode (_, observable, observedProperty, node, eventName) {
     node.addEventListener(eventName, event => {
         if (observable.listeners[observedProperty] === undefined) {
             observable.watchers[observedProperty] = event.target.value;

@@ -1,0 +1,29 @@
+const path = require('path');
+
+const distDir = path.resolve(__dirname, 'dist');
+const staticDir = path.resolve(__dirname, 'static');
+
+module.exports = {
+    entry: './src/app.js',
+    devServer: {
+        static: staticDir
+    },
+    output: {
+        filename: 'bundle.js',
+        path: distDir,
+        publicPath: '/'
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(jpg|jpeg|gif|png|ico)$/,
+                exclude: /node_modules/,
+                use: 'file-loader?name=[name].[ext]'
+             }
+        ],
+    },
+};

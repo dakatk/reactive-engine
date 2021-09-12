@@ -1,4 +1,4 @@
-import PartyMember from '../lib/partyMember';
+import PartyMember from '../lib/party-member';
 
 const SelectComponent = new PartyMember(
     'select-component',
