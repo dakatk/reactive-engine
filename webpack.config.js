@@ -1,8 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const isProduction = process.env.NODE_ENV == 'production';
 
-const config = {
+module.exports = {
     mode: process.env.NODE_ENV,
     entry: './src/app.js',
     output: {
@@ -15,7 +14,7 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './public/index.html'
         })
     ],
     module: {
@@ -26,19 +25,9 @@ const config = {
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+                exclude: /node_modules/,
                 type: 'asset'
             }
         ]
     }
-};
-
-module.exports = () => {
-    if (isProduction) {
-        config.mode = 'production';
-        config.plugins.push(new MiniCssExtractPlugin());
-    } 
-    else {
-        config.mode = 'development';
-    }
-    return config;
 };
