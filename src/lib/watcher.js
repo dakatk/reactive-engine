@@ -1,18 +1,20 @@
 import customProps from './custom-props.json';
 import callbacks from './watcher-callbacks';
 
-function Watcher (partyMember) {
+function Watcher (partyMember, parent) {
     this.id = partyMember.id;
-    this.cleanDOM = partyMember.cleanDOM ?? false;
+    this.cleanDOM = !partyMember.debug;
     this.data = partyMember.clone();
-
+    this.parent = parent;
+    
+    this.children = {};
     this.signals = {};
     this.removed = {};
 }
 
 Watcher.prototype.setup = function (parentEl) {
     connectWatchers.call(this, this.data.watchers);
-    parseDOM.call(this, parentEl, this.data);
+    parseDOM.call(this, parentEl, this.personnelDetails());
 }
 
 Watcher.prototype.watch = function (property, signalHandler) {
@@ -48,6 +50,16 @@ Watcher.prototype.remove = function (observable, observedProperty, node) {
         
         parent.insertBefore(node, sibling);
     }
+}
+
+Watcher.prototype.personnelDetails = function () {
+    return {
+        id: this.id,
+        watchers: this.data.watchers,
+        listeners: this.data.listeners,
+        parent: this.parent,
+        children: this.children
+    };
 }
 
 function connectWatchers (obj, prefix) {

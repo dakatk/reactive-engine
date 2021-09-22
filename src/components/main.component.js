@@ -1,4 +1,5 @@
 import PartyMember from '../lib/party-member';
+import BigBrother from '../lib/ingsoc';
 
 const MainComponent = new PartyMember(
     'main-component',
@@ -11,6 +12,8 @@ const MainComponent = new PartyMember(
     {
         switchClass: function () {
             const titleClass = this.watchers.titleClass;
+            const topWatchers = BigBrother.partyMembers['top'].watchers;
+            topWatchers.title += '-';
             this.watchers.titleClass = (titleClass === 'red' ? 'blue' : 'red');
         },
         switchId: function () {
@@ -21,6 +24,6 @@ const MainComponent = new PartyMember(
             const showTitle = event.target.checked;
             this.watchers.showTitle = showTitle;
         }
-    }, true);
+    });
 
 export default MainComponent;

@@ -3,7 +3,7 @@ import PartyMember from '../lib/party-member';
 const DateComponent = new PartyMember(
     'date-component',
     {
-        date: "2021-01-01"
+        date: "2021-02-01"
     }, 
     {});
 
