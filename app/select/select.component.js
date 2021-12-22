@@ -1,4 +1,4 @@
-import PartyMember from '../lib/party-member';
+import PartyMember from '../../party-member';
 
 const SelectComponent = new PartyMember(
     'select-component',
@@ -12,7 +12,8 @@ const SelectComponent = new PartyMember(
             dateComponent.watchers.date = todaysDate();
             this.watchers.text[0] = event.target.value;
         }
-    });
+    },
+    'app/select/select.component.html');
 
 function todaysDate() {
     const today = new Date();

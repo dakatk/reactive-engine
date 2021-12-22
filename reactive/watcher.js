@@ -1,5 +1,108 @@
-import customProps from './custom-props.json';
-import callbacks from './watcher-callbacks';
+import Module from "../index.module";
+
+const customProps = {
+    'interpolate-for': {
+        'existingProperty': null,
+        'child': 'watchers',
+        'callback': 'interpolateForNode'
+    },
+    'view-if': {
+        'existingProperty': null,
+        'child': 'watchers',
+        'callback': 'viewIfNode'
+    },
+    'watch-text': {
+        'existingProperty': ['textContent', 'innerText'],
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'watch-value': {
+        'existingProperty': 'value',
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'watch-html': {
+        'existingProperty': 'innerHTML',
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'watch-class': {
+        'existingProperty': 'className',
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'watch-id': {
+        'existingProperty': 'id',
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'watch-name': {
+        'existingProperty': 'name',
+        'child': 'watchers',
+        'callback': 'watchNode'
+    },
+    'listen-input': {
+        'existingProperty': 'input',
+        'callback': 'listenToNode'
+    },
+    'listen-click': {
+        'existingProperty': 'click',
+        'callback': 'listenToNode'
+    },
+    'listen-change': {
+        'existingProperty': 'change',
+        'callback': 'listenToNode'
+    }
+};
+
+const callbacks = {
+    interpolateForNode: function (watcher, observable, observedProperty, node) {
+        const parent = node.parentNode;
+        const observedObject = observable[observedProperty];
+    
+        const keyRegex = /\$\{key\}/g;
+        const valueRegex = /\$\{value\}/g;
+    
+        for (const key in observedObject) {
+            const value = observedObject[key];
+            const newNode = node.cloneNode(true);
+    
+            for (const nodeAttr of node.attributes) {
+                const nodeName = nodeAttr.nodeName;
+                const nodeValue = nodeAttr.nodeValue.replace(keyRegex, key).replace(valueRegex, value);
+    
+                newNode.attributes[nodeName].nodeValue = nodeValue;
+            }
+            parent.insertBefore(newNode, node);
+    
+            if (watcher.cleanDOM) {
+                newNode.removeAttribute('interpolate-for');
+            }
+        }
+        parent.removeChild(node);
+    },
+    
+    viewIfNode: function (watcher, observable, observedProperty, node, _, watchKey) {
+        watcher.remove(observable, observedProperty, node);
+        watcher.watch(watchKey, () => watcher.remove(observable, observedProperty, node));
+    },
+    
+    watchNode: function (watcher, observable, observedProperty, node, nodeProperty, watchKey) {
+        node[nodeProperty] = observable[observedProperty];
+        watcher.watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
+    },
+    
+    listenToNode: function (_, observable, observedProperty, node, eventName) {
+        node.addEventListener(eventName, event => {
+            if (observable.listeners[observedProperty] === undefined) {
+                observable.watchers[observedProperty] = event.target.value;
+            }
+            else {
+                observable.listeners[observedProperty].call(observable, event);
+            }
+        }, true);
+    }
+}
 
 function Watcher (partyMember, parent) {
     this.id = partyMember.id;
@@ -10,11 +113,15 @@ function Watcher (partyMember, parent) {
     this.children = {};
     this.signals = {};
     this.removed = {};
+    this.el = undefined;
 }
 
-Watcher.prototype.setup = function (parentEl) {
+Watcher.prototype.setup = function () {
+    if (!this.el) {
+        return;
+    }
     connectWatchers.call(this, this.data.watchers);
-    parseDOM.call(this, parentEl, this.personnelDetails());
+    parseDOM.call(this, this.el, this.personnelDetails());
 }
 
 Watcher.prototype.watch = function (property, signalHandler) {
@@ -131,4 +238,3 @@ function observeNodeAttr (parentEl, selector, nodeProperty, observable, callback
     }
 }
 
-export default Watcher;
