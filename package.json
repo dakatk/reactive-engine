@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "node -r esm build.js",
-    "start": "node -r esm serve.js"
+    "build": "node -r esm lib/build.js --debug=true --module=index.module.js",
+    "start": "node -r esm lib/serve.js --debug=true"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "clone-deep": "^4.0.1",
     "esbuild": "^0.14.7",
     "esm": "^3.2.25",
+    "minimist": "^1.2.5",
     "node-static": "^0.7.11"
   }
 }
