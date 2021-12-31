@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "node -r esm lib/build.js --debug=true --module=index.module.js",
-    "start": "node -r esm lib/serve.js --debug=true"
+    "build": "node -r esm lib/build.js --debug=true",
+    "start": "node -r esm lib/serve.js"
   },
   "repository": {
     "type": "git",

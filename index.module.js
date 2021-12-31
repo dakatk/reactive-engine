@@ -3,11 +3,11 @@ import DateComponent from './app/date/date.component';
 import MainComponent from './app/main/main.component';
 import SelectComponent from './app/select/select.component';
 
-const EntryModule = [
+const IndexModule = [
     AppComponent,
     DateComponent,
     MainComponent,
     SelectComponent
 ];
 
-export { EntryModule };
+export { IndexModule };

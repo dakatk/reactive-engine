@@ -1,4 +1,6 @@
 {
     "debug": true,
-    "module": null
+    "module-path": "index.module.js",
+    "entry-path": "index.html",
+    "module-name": "IndexModule"
 }
