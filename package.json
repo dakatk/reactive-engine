@@ -7,9 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "webpack --mode=production",
-    "start": "webpack serve --mode=production",
-    "start:dev": "webpack serve --mode=development"
+    "build": "node -r esm lib/build.js --debug=true",
+    "start": "node -r esm lib/serve.js"
   },
   "repository": {
     "type": "git",
@@ -26,21 +25,12 @@
     "url": "https://github.com/dakatk/reactive-engine/issues"
   },
   "homepage": "https://github.com/dakatk/reactive-engine#readme",
-  "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/preset-env": "^7.15.0",
-    "@webpack-cli/generators": "^2.3.0",
-    "babel-loader": "^8.2.2",
-    "css-loader": "^6.2.0",
-    "file-loader": "^6.2.0",
-    "mini-css-extract-plugin": "^2.3.0",
-    "style-loader": "^3.2.1",
-    "webpack": "^5.52.1",
-    "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.0"
-  },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
     "clone-deep": "^4.0.1",
-    "html-webpack-plugin": "^5.3.2"
+    "esbuild": "^0.14.7",
+    "esm": "^3.2.25",
+    "minimist": "^1.2.5",
+    "node-static": "^0.7.11"
   }
 }

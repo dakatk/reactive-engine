@@ -1,5 +1,4 @@
-import PartyMember from '../lib/party-member';
-import BigBrother from '../lib/ingsoc';
+import PartyMember from '../../lib/party-member';
 
 const MainComponent = new PartyMember(
     'main-component',
@@ -10,20 +9,19 @@ const MainComponent = new PartyMember(
         showTitle: true,
     },
     {
-        switchClass: function () {
+        switchClass: function() {
             const titleClass = this.watchers.titleClass;
-            const topWatchers = BigBrother.partyMembers['top'].watchers;
-            topWatchers.title += '-';
             this.watchers.titleClass = (titleClass === 'red' ? 'blue' : 'red');
         },
-        switchId: function () {
+        switchId: function() {
             const titleId = this.watchers.titleId;
             this.watchers.titleId = (titleId === 'bg-cyan' ? 'bg-yellow' : 'bg-cyan');
         },
-        toggleTitle: function (event) {
+        toggleTitle: function(event) {
             const showTitle = event.target.checked;
             this.watchers.showTitle = showTitle;
         }
-    });
+    },
+    'app/main/main.component.html');
 
 export default MainComponent;
