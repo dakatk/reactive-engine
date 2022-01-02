@@ -1,12 +1,14 @@
 import path from 'path';
 import options from './mandates-options.json';
 
+const MANDATES_FILE = 'mandates.js';
+
 async function partyMandates() {
-    const mandatesPath = path.resolve(process.cwd(), 'app.mandates.js');
+    const mandatesPath = path.resolve(process.cwd(), MANDATES_FILE);
     const { default: mandates } = await import(mandatesPath);
 
     if (!mandates) {
-        throw new Error('Mandates file ("app.mandates.js") missing from project root directory');
+        throw new Error(`Mandates file ("${MANDATES_FILE}") missing from project root directory`);
     }
     return sanitize(mandates);
 }
