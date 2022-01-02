@@ -1,6 +1,7 @@
 import customProps from './custom-props.json';
 import callbacks from './watcher-callbacks';
 
+// TODO rename (?)
 function Watcher(partyMember, cleanDOM) {
     this.id = partyMember.id;
     this.cleanDOM = cleanDOM;

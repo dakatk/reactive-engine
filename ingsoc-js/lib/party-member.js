@@ -1,5 +1,6 @@
 import cloneDeep from "clone-deep";
 
+// TODO 'watchers' and 'listeners' should be optional 
 function PartyMember (id, watchers, listeners, templateFile) {
     this.id = id;
     this.watchers = watchers;

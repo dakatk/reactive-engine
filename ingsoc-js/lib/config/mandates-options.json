@@ -1,0 +1,10 @@
+{
+    "defaults": {
+        "devMode": false
+    },
+    "required": [
+        "entryModulePath",
+        "entryModuleName",
+        "entryTemplatePath"
+    ]
+}

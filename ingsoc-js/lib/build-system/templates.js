@@ -1,6 +1,8 @@
 import Registrar from './registrar';
 import cheerio from 'cheerio';
 
+// TODO Dynamically load templates by recursively searching 'appDirectory' fro files ewith the 'html' extension
+
 const MAX_UUID = Number.MAX_SAFE_INTEGER - 1;
 const MAX_DEPTH = 1000;
 
