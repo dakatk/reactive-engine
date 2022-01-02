@@ -1,10 +1,12 @@
 import cheerio from "cheerio";
 import fs from 'fs';
+import path from 'path';
 
 const registry = {};
 
 function registerPartyMember(partyMember) {
-    const templateFile = partyMember.template;
+    // TODO Dynamically load templates by recursively searching 'appDirectory' for files that match ${id}.html
+    const templateFile = path.resolve(process.cwd(), partyMember.template);
     partyMember.template = loadTemplateFromFile(templateFile);
     
     const id = partyMember.id;

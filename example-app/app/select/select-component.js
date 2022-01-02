@@ -10,6 +10,6 @@ const SelectComponent = new PartyMember(
             this.watchers.text[0] = event.target.value;
         }
     },
-    'app/select/select.component.html');
+    'app/select/select-component.html');
 
 export default SelectComponent;

@@ -22,6 +22,6 @@ const MainComponent = new PartyMember(
             this.watchers.showTitle = showTitle;
         }
     },
-    'app/main/main.component.html');
+    'app/main/main-component.html');
 
 export default MainComponent;
