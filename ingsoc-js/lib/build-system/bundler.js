@@ -1,19 +1,18 @@
 import { build } from 'esbuild';
-import args from '../cli/args';
 import path from 'path';
 
-export default function bundleJsModulesWithWatcher(minify, entryModuleName, componentsByUUID) {
-    const entryModulePath = path.resolve(process.cwd(), args['module-path']);
+export default function bundleJsModulesWithWatcher(minify, componentsByUUID, entryModulePath, entryModuleName, outputDirectory) {
+    const outfile = path.resolve(outputDirectory, 'bundle.js');
     build({
-        entryPoints: ['lib/reactive/ingsoc.js'],
+        entryPoints: ['ingsoc-js/lib/reactive/ingsoc.js'],
         inject: [entryModulePath],
         define: {
             'componentsByUUID': JSON.stringify(componentsByUUID),
             'IndexModule': entryModuleName
         },
-        outfile: 'public/bundle.js',
         bundle: true,
         platform: 'node',
+        outfile,
         minify,
     })
     .catch(() => {

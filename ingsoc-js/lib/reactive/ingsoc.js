@@ -1,4 +1,4 @@
-import Watcher from './watcher';
+import Observer from './observer';
 
 function bigBrotherIsWatching(module, components) {
     if (!Array.isArray(module)) {
@@ -7,9 +7,9 @@ function bigBrotherIsWatching(module, components) {
     for (const [uuid, component] of Object.entries(components)) {
         const componentNode = document.querySelector(`${component.id}[uuid="${uuid}"]`);
         const partyMember = module.filter(value => value.id === component.id)[0];
-        const watcher = new Watcher(partyMember, !component.debug);
+        const observer = new Observer(partyMember, !component.debug);
 
-        watcher.setup(componentNode, component.nodes);
+        observer.setup(componentNode, component.nodes);
     }
 }
 

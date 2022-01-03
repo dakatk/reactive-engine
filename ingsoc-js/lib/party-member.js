@@ -1,10 +1,9 @@
 import cloneDeep from "clone-deep";
 
-function PartyMember (id, watchers, listeners, templateFile) {
+function PartyMember (id, watchers, listeners) {
     this.id = id;
-    this.watchers = watchers;
-    this.listeners = listeners;
-    this.template = templateFile;
+    this.watchers = watchers || {};
+    this.listeners = listeners || {};
 }
 
 PartyMember.prototype.clone = function () {

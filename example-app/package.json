@@ -1,0 +1,14 @@
+{
+  "name": "example-app",
+  "version": "1.0.0",
+  "description": "Example App made using ingsoc.js",
+  "scripts": {
+    "start": "ingsoc serve --port 3000",
+    "build": "ingsoc build"
+  },
+  "author": "Dusten Knull",
+  "license": "ISC",
+  "dependencies": {
+    "ingsoc-js": "file:../ingsoc-js"
+  }
+}

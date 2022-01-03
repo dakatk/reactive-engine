@@ -1,7 +1,7 @@
 import customProps from './custom-props.json';
-import callbacks from './watcher-callbacks';
+import callbacks from './observer-callbacks';
 
-function Watcher(partyMember, cleanDOM) {
+function Observer(partyMember, cleanDOM) {
     this.id = partyMember.id;
     this.cleanDOM = cleanDOM;
     this.data = partyMember.clone();
@@ -10,26 +10,26 @@ function Watcher(partyMember, cleanDOM) {
     this.removed = {};
 }
 
-Watcher.prototype.setup = function(parentEl, childUUIDs) {
-    connectWatchers.call(this, this.data.watchers);
+Observer.prototype.setup = function(parentEl, childUUIDs) {
+    connectObservableProperties.call(this, this.data.watchers);
     parseDOM.call(this, parentEl, childUUIDs, this.personnelDetails());
 }
 
-Watcher.prototype.watch = function(property, signalHandler) {
+Observer.prototype.watch = function(property, signalHandler) {
     if (!this.signals[property]) {
         this.signals[property] = [];
     }
     this.signals[property].push(signalHandler);
 }
 
-Watcher.prototype.notify = function(signal) {
+Observer.prototype.notify = function(signal) {
     if (!this.signals[signal] || this.signals[signal].length < 1) {
         return;
     }
     this.signals[signal].forEach((signalHandler) => signalHandler.call());
 }
 
-Watcher.prototype.remove = function(observable, observedProperty, node) {
+Observer.prototype.remove = function(observable, observedProperty, node) {
     if (!observable[observedProperty]) {
         const parent = node.parentNode;
         const index = Array.from(parent.children).indexOf(node);
@@ -50,7 +50,7 @@ Watcher.prototype.remove = function(observable, observedProperty, node) {
     }
 }
 
-Watcher.prototype.personnelDetails = function() {
+Observer.prototype.personnelDetails = function() {
     return {
         id: this.id,
         watchers: this.data.watchers,
@@ -58,7 +58,7 @@ Watcher.prototype.personnelDetails = function() {
     };
 }
 
-function connectWatchers(obj, prefix) {
+function connectObservableProperties(obj, prefix) {
     const self = this;
 
     for (const key in obj) {
@@ -67,7 +67,7 @@ function connectWatchers(obj, prefix) {
             const keyPrefix = (prefix === undefined ? key : `${prefix}.${key}`);
 
             if (val instanceof Object && prefix === undefined) {
-                connectWatchers.call(self, val, keyPrefix);
+                connectObservableProperties.call(self, val, keyPrefix);
                 continue;
             }
             Object.defineProperty(obj, key, {
@@ -136,4 +136,4 @@ function observeNodeAttr(parentEl, selector, propName, nodeProperty, observable,
     }
 }
 
-export default Watcher;
+export default Observer;

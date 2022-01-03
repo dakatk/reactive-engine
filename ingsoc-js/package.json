@@ -1,14 +1,17 @@
 {
   "name": "reactivelib",
   "version": "1.0.0",
-  "description": "ingsoc.js test",
-  "private": true,
+  "description": "ingsoc.js",
+  "main": "index.js",
+  "type": "module",
   "directories": {
     "lib": "lib"
   },
+  "bin": {
+    "ingsoc": "index.js"
+  },
   "scripts": {
-    "build": "node -r esm lib/build.js --debug=true",
-    "start": "node -r esm lib/serve.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -16,7 +19,8 @@
   },
   "keywords": [
     "ingsoc",
-    "react",
+    "ingsoc-js",
+    "reactive",
     "orwell"
   ],
   "author": "Dusten Knull",
@@ -28,9 +32,9 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
     "clone-deep": "^4.0.1",
+    "commander": "^8.3.0",
     "esbuild": "^0.14.7",
-    "esm": "^3.2.25",
-    "minimist": "^1.2.5",
+    "glob": "^7.2.0",
     "node-static": "^0.7.11"
   }
 }

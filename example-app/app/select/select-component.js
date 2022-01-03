@@ -1,4 +1,4 @@
-import PartyMember from '../../lib/party-member';
+import PartyMember from 'ingsoc-js/lib/party-member.js';
 
 const SelectComponent = new PartyMember(
     'select-component',
@@ -9,7 +9,6 @@ const SelectComponent = new PartyMember(
         updateText: function(event) {
             this.watchers.text[0] = event.target.value;
         }
-    },
-    'app/select/select.component.html');
+    });
 
 export default SelectComponent;
