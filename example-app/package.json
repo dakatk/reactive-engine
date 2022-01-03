@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Example App made using ingsoc.js",
   "scripts": {
-    "run": "ingsoc serve --port 3000",
+    "start": "ingsoc serve --port 3000",
     "build": "ingsoc build"
   },
   "author": "Dusten Knull",
