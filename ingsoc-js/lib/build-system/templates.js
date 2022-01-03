@@ -1,4 +1,3 @@
-import Registrar from './registrar';
 import cheerio from 'cheerio';
 
 const MAX_UUID = Number.MAX_SAFE_INTEGER - 1;
@@ -7,24 +6,22 @@ const MAX_DEPTH = 1000;
 const componentsByUUID = {};
 let $, UUID = 0;
 
-export default function generateHtmlFromTemplate(template, debug) {
+export default function generateHtmlFromTemplate(template, registry, debug) {
     $ = cheerio.load(template);
     const body = $('body')[0];
     const head = $('head');
 
     head.append('<script src="bundle.js" defer></script>');
-    loadRecursiveNodesWithParent(body, debug);
+    loadRecursiveNodesWithParent(body, registry, debug);
 
     return [$.html(), componentsByUUID];
 }
 
-
-function loadRecursiveNodesWithParent(parentNode, debug, depth=0, parentUUID) {
+function loadRecursiveNodesWithParent(parentNode, registry, debug, depth=0, parentUUID) {
     if (!$ || depth >= MAX_DEPTH) { 
         return; 
     }
     const children = parentNode.children.filter(el => el.type === 'tag');
-    const registry = Registrar.registry;
 
     for (const child of children) {
         const childEl = $(child);
@@ -38,15 +35,13 @@ function loadRecursiveNodesWithParent(parentNode, debug, depth=0, parentUUID) {
             }
             continue;
         }
-        const component = registry[child.name];
-        const template = component.template;
-
-        const id = component.id;
-        componentsByUUID[UUID] = { id, debug, nodes: [] };
+        const id = child.name;
+        const template = registry[id];
 
         childEl.html(template.html());
+        componentsByUUID[UUID] = { id, debug, nodes: [] };
 
-        loadRecursiveNodesWithParent(child, debug, depth + 1, UUID);
+        loadRecursiveNodesWithParent(child, registry, debug, depth + 1, UUID);
     }
 }
 

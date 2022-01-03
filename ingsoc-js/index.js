@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
 import { program } from 'commander';
-import build from './lib/build';
-import serve from './lib/serve';
+import build from './lib/build.js';
+import serve from './lib/serve.js';
 
 program.version('0.0.1');
 
@@ -11,7 +11,7 @@ program.command('build')
     .action(build);
 
 program.command('serve')
-    .option('-p, --port', 'Port number')
+    .option('-p, --port <number>', 'Port number')
     .description('Serve')
     .action(serve);
 

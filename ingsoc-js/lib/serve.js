@@ -9,9 +9,6 @@ export default function serve({port}) {
     const server = http.createServer((req, res) => {
         file.serve(req, res);
     });
-
-    console.log(port);
+    
     server.listen(port || DEFAULT_PORT);
 }
-
-export default serve;

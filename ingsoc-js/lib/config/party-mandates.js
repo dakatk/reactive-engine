@@ -1,7 +1,16 @@
 import path from 'path';
-import options from './mandates-options.json';
 
 const MANDATES_FILE = 'mandates.js';
+const OPTIONS = {
+    defaults: {
+        devMode: false
+    },
+    required: [
+        'entryModulePath',
+        'entryModuleName',
+        'entryTemplatePath'
+    ]
+}
 
 async function partyMandates() {
     const mandatesPath = path.resolve(process.cwd(), MANDATES_FILE);
@@ -14,12 +23,12 @@ async function partyMandates() {
 }
 
 function sanitize(mandates) {
-    for (const required of options.required) {
+    for (const required of OPTIONS.required) {
         if (!(required in mandates)) {
             throw new Error(`Missing required mandate: ${required}`);
         }
     }
-    const defaultMandates = options.defaults;
+    const defaultMandates = OPTIONS.defaults;
     return {
         ...defaultMandates,
         ...mandates
@@ -27,8 +36,8 @@ function sanitize(mandates) {
 }
 
 const PartyMandates = {
-    async get mandates () {
-        return await partyMandates();
+    get mandates () {
+        return partyMandates();
     }
 }
 
