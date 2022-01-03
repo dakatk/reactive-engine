@@ -3,14 +3,16 @@ import path from 'path';
 const MANDATES_FILE = 'mandates.js';
 const OPTIONS = {
     defaults: {
-        devMode: false
+        devMode: false,
+        entryModuleName: 'IndexModule'
     },
     required: [
         'entryModulePath',
-        'entryModuleName',
-        'entryTemplatePath'
+        'entryTemplatePath',
+        'appDirectory',
+        'outputDirectory'
     ]
-}
+};
 
 async function partyMandates() {
     const mandatesPath = path.resolve(process.cwd(), MANDATES_FILE);

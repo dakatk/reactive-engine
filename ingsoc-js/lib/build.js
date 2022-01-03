@@ -33,5 +33,5 @@ function generatePublicFiles(template, registry, {devMode, entryModulePath, entr
             throw new Error(err);
         }
     });
-    //bundleJsModulesWithWatcher(!devMode, componentsByUUID, entryModulePath, entryModuleName, outputDirectory);
+    bundleJsModulesWithWatcher(!devMode, componentsByUUID, entryModulePath, entryModuleName, outputDirectory);
 }
