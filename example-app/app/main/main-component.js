@@ -1,4 +1,4 @@
-import PartyMember from '../../lib/party-member';
+import PartyMember from 'ingsoc-js/lib/party-member.js';
 
 const MainComponent = new PartyMember(
     'main-component',
@@ -21,7 +21,6 @@ const MainComponent = new PartyMember(
             const showTitle = event.target.checked;
             this.watchers.showTitle = showTitle;
         }
-    },
-    'app/main/main-component.html');
+    });
 
 export default MainComponent;

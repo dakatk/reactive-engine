@@ -1,5 +1,5 @@
-import PartyMember from '../lib/party-member';
+import PartyMember from 'ingsoc-js/lib/party-member.js';
 
-const AppComponent = new PartyMember('app-component', {}, {}, 'app/app-component.html');
+const AppComponent = new PartyMember('app-component');
 
 export default AppComponent;
