@@ -1,22 +1,2 @@
-.red {
-    color: red;
-}
-
-.blue {
-    color: blue;
-}
-
-#bg-cyan {
-    background-color: darkcyan;
-    margin-top: 0em;
-}
-
-#bg-yellow {
-    background-color: yellow;
-    margin-top: 0em;
-}
-
-.bottom-space {
-    display: block;
-    margin-bottom: 1em;
-}
+@import 'app/app-component.css';
+@import 'app/main/main-component.css';
