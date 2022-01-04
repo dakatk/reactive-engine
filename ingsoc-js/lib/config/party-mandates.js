@@ -25,75 +25,83 @@ const OPTIONS = {
         type: 'string',
         subtype: 'a javascript source file',
         addRoot: true,
-        validate: isJsFile
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['js', 'mjs'])
     },
     entryTemplatePath: {
         default: 'index.html',
         type: 'string',
         subtype: 'an html file',
         addRoot: true,
-        validate: isHtmlFile
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['html'])
     },
     entryStylePath: {
         default: 'index.css',
         type: 'string',
         subtype: 'a css file',
         addRoot: true,
-        validate: isCssFile
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['css'])
     },
     appDirectory: {
         default: 'app',
         type: 'string',
-        subtype: 'a directory',
+        subtype: 'a non-root directory',
         addRoot: true,
         validate: isDirectory
     },
     outputDirectory: {
         default: 'public',
         type: 'string',
-        subtype: 'a directory',
+        subtype: 'a non-root directory',
         addRoot: true,
         validate: isDirectory
     },
 };
-// FIXME check for key words
+
 const VAR_NAME_REG = /^[a-zA-Z_$][a-zA-Z_$0-9]*$/;
+const RESERVED_KEYWORDS = [
+    'do','if', 'in', 'for', 'let', 'new', 'try', 'var', 'case', 'else',
+    'enum', 'eval', 'null', 'this', 'true', 'void', 'with', 'await', 'break',
+    'catch', 'class', 'const', 'false', 'super', 'throw', 'while', 'yield',
+    'async', 'await', 'delete', 'export', 'import', 'public', 'return', 'static',
+    'switch', 'typeof', 'default', 'extends', 'finally', 'package', 'private',
+    'continue', 'debugger', 'function', 'arguments', 'interface', 'protected',
+    'implements', 'instanceof'
+];
 
 function isBooleanValue(value) {
     return value === true || value === false;
 }
 
 function isVarName(varName) {
-    return varName.match(VAR_NAME_REG) !== null;
+    if (varName.match(VAR_NAME_REG) !== null) {
+        return RESERVED_KEYWORDS.indexOf(varName) === -1;
+    }
 }
 
-function isJsFile(fileName, root) {
-    if (!fileName.endsWith('.js') && !fileName.endsWith('.jsm')) {
+function isFileWithExtension(fileName, root, exts) {
+    let extFound = false;
+    for (const ext of exts) {
+        if (fileName.endsWith(ext)) {
+            extFound = true;
+            break;
+        }
+    }
+
+    if (!extFound) {
         return false;
     }
     const fullFile = path.resolve(root, fileName);
     return fs.existsSync(fullFile);
 }
 
-function isHtmlFile(fileName, root) {
-    if (!fileName.endsWith('.html')) {
-        return false;
-    } 
-    const fullFile = path.resolve(root, fileName);
-    return fs.existsSync(fullFile);
-}
-
-function isCssFile(fileName, root) {
-    if (!fileName.endsWith('.css')) {
-        return false;
-    } 
-    const fullFile = path.resolve(root, fileName);
-    return fs.existsSync(fullFile);
-}
-
 function isDirectory(dirName, root) {
-    const fullPath = root === undefined ? dirName : path.resolve(root, dirName);
-    return fs.existsSync(fullPath);
+    if (root !== undefined) {
+        if (dirName.trim() === '') {
+            return false;
+        }
+        dirName = path.resolve(root, dirName);
+    }
+    return fs.existsSync(dirName);
 }
 
 async function partyMandates() {
@@ -139,6 +147,10 @@ function validateTypes(mandates) {
         else if (mandate.validate && !mandate.validate(value, root)) {
             throw new Error(`Mandate "${key}" couldn't be validated as ${mandate.subtype}`);
         }
+    }
+
+    if (mandates.outputDirectory === mandates.appDirectory) {
+        throw new Error('"outputDirectory" cannot have the same value as "appDirectory"');
     }
 }
 
