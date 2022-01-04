@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import createRegistry from './build-system/registrar.js';
 import generateHtmlFromTemplate from './build-system/templates.js';
-import bundleJsModulesWithWatcher from './build-system/bundler.js';
+import { bundleJsModules, bundleStyleSheets } from './build-system/bundler.js';
 import PartyMandates from './config/party-mandates.js';
 
 export default function build() {
@@ -24,7 +24,7 @@ export default function build() {
         });
 }
 
-function generatePublicFiles(template, registry, {devMode, entryModulePath, entryModuleName, outputDirectory}) {
+function generatePublicFiles(template, registry, {devMode, entryModulePath, entryCssPath, entryModuleName, outputDirectory}) {
     const [html, componentsByUUID] = generateHtmlFromTemplate(template, registry, devMode);
     const htmlFilePath = path.resolve(outputDirectory, 'index.html');
 
@@ -33,5 +33,6 @@ function generatePublicFiles(template, registry, {devMode, entryModulePath, entr
             throw new Error(err);
         }
     });
-    bundleJsModulesWithWatcher(!devMode, componentsByUUID, entryModulePath, entryModuleName, outputDirectory);
+    bundleJsModules(!devMode, componentsByUUID, entryModulePath, entryModuleName, outputDirectory);
+    //bundleStyleSheets(entryCssPath, outputDirectory);
 }

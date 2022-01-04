@@ -1,4 +1,4 @@
-import cloneDeep from "clone-deep";
+import cloneDeep from 'clone-deep';
 
 function PartyMember (id, watchers, listeners) {
     this.id = id;

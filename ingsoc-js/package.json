@@ -36,5 +36,8 @@
     "esbuild": "^0.14.7",
     "glob": "^7.2.0",
     "node-static": "^0.7.11"
+  },
+  "devDependencies": {
+    "css-combine": "^1.0.0"
   }
 }
