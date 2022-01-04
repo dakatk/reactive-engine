@@ -22,9 +22,10 @@ export function bundleJsModules(minify, componentsByUUID, entryModulePath, entry
     });
 }
 
-export function bundleStyleSheets(entryCssPath, outputDirectory) {
+export function bundleStyleSheets(entryStylePath, outputDirectory) {
     const outfile = path.resolve(outputDirectory, 'style.css');
-    combine(entryCssPath).pipe(
+    // TODO should be possible to remove this dependency by writing my own logic
+    combine(entryStylePath).pipe(
         fs.createWriteStream(outfile)
     );
 }

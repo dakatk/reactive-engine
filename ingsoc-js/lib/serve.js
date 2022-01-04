@@ -1,15 +1,20 @@
 import http from 'http';
-import path from 'path';
 import { Server } from 'node-static';
+import PartyMandates from './config/party-mandates.js';
 
 const DEFAULT_PORT = 3000;
 
 export default function serve({port}) {
-    // FIXME should be based on outputDirectory from mandates
-    const file = new Server(path.resolve(process.cwd(), 'public'));
-    const server = http.createServer((req, res) => {
-        file.serve(req, res);
-    });
-    
-    server.listen(port || DEFAULT_PORT);
+    PartyMandates.mandates
+        .then(mandates => {
+            const file = new Server(mandates.outputDirectory);
+            const server = http.createServer((req, res) => {
+                file.serve(req, res);
+            });
+            server.listen(port || DEFAULT_PORT);
+        })
+        .catch(err => {
+            console.error(err);
+            process.exit(1);
+        })
 }

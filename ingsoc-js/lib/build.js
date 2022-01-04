@@ -24,7 +24,7 @@ export default function build() {
         });
 }
 
-function generatePublicFiles(template, registry, {devMode, entryModulePath, entryCssPath, entryModuleName, outputDirectory}) {
+function generatePublicFiles(template, registry, {devMode, entryModulePath, entryStylePath, entryModuleName, outputDirectory}) {
     const [html, componentsByUUID] = generateHtmlFromTemplate(template, registry, devMode);
     const htmlFilePath = path.resolve(outputDirectory, 'index.html');
 
@@ -34,5 +34,5 @@ function generatePublicFiles(template, registry, {devMode, entryModulePath, entr
         }
     });
     bundleJsModules(!devMode, componentsByUUID, entryModulePath, entryModuleName, outputDirectory);
-    //bundleStyleSheets(entryCssPath, outputDirectory);
+    bundleStyleSheets(entryStylePath, outputDirectory);
 }

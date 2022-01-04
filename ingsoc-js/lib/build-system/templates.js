@@ -4,14 +4,18 @@ const MAX_UUID = Number.MAX_SAFE_INTEGER - 1;
 const MAX_DEPTH = 1000;
 
 const componentsByUUID = {};
-let $, UUID = 0;
+var $, UUID = 0;
+
+const HEADER = '<meta charset="UTF-8">\n\
+                <link rel="stylesheet" href="style.css">\n\
+                <script src="bundle.js" defer></script>';
 
 export default function generateHtmlFromTemplate(template, registry, debug) {
     $ = cheerio.load(template);
     const body = $('body')[0];
     const head = $('head');
 
-    head.append('<script src="bundle.js" defer></script>');
+    head.append(HEADER);
     loadRecursiveNodesWithParent(body, registry, debug);
 
     return [$.html(), componentsByUUID];
