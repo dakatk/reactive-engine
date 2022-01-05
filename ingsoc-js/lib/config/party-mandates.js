@@ -86,7 +86,6 @@ function isFileWithExtension(fileName, root, exts) {
             break;
         }
     }
-
     if (!extFound) {
         return false;
     }
@@ -127,7 +126,8 @@ function sanitize(mandates) {
             mandates[key] = value.default;
         }
         if (value.addRoot) {
-            mandates[key] = path.resolve(mandates.rootDirectory, mandates[key]);
+            const normalizedRoot = path.normalize(mandates.rootDirectory);
+            mandates[key] = path.resolve(normalizedRoot, mandates[key]);
         }
     }
     return mandates;

@@ -33,11 +33,13 @@
     "cheerio": "^1.0.0-rc.10",
     "clone-deep": "^4.0.1",
     "commander": "^8.3.0",
+    "concat-stream": "^2.0.0",
+    "css": "^3.0.0",
     "esbuild": "^0.14.7",
     "glob": "^7.2.0",
+    "html-format": "^1.0.1",
+    "hyperquest": "^2.1.3",
+    "is-url": "^1.2.4",
     "node-static": "^0.7.11"
-  },
-  "devDependencies": {
-    "css-combine": "^1.0.0"
   }
 }
