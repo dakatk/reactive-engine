@@ -73,7 +73,7 @@ export default class CSSCombine extends Readable {
                     read(file)
                         .on('error', error => self.emit(error.message))
                         .pipe(concat(content => {
-                            parse(file, content, next, stack.concat([file]));
+                            parse(file, content, next, [...stack, file]);
                         }));
                 }
                 else if (rule.declarations && !rule.declarations.length) {
