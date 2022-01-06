@@ -35,7 +35,7 @@ export default class CSSCombine extends Readable {
                 parse(entrypoint, content, () => self.push(null));
             }));
 
-        function parse(filename, content, callback) {
+        function parse(filename, content, callback, stack=[]) {
             if (!content) {
                 callback();
                 return;
@@ -67,10 +67,13 @@ export default class CSSCombine extends Readable {
                     if (!path.extname(file)) {
                         file += '.css';
                     }
+                    if (stack.includes(file)) {
+                        console.error(`Infinite recursion found for file "${file}"`);
+                    }
                     read(file)
                         .on('error', error => self.emit(error.message))
                         .pipe(concat(content => {
-                            parse(file, content, next);
+                            parse(file, content, next, stack.concat([file]));
                         }));
                 }
                 else if (rule.declarations && !rule.declarations.length) {

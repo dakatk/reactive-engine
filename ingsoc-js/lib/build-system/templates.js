@@ -48,6 +48,11 @@ export default class ExpandTemplate {
         }
         const children = parentNode.children.filter(el => el.type === 'tag');
         for (const child of children) {
+            const id = child.name;
+            if (stack.includes(id)) {
+                console.error(`Infinite recursion found at ${id}, aborting generation for ${parentNode.name}`);
+                continue;
+            }
             const childEl = this.$(child);
             const UUID = this.nextUUID();
     
@@ -59,13 +64,16 @@ export default class ExpandTemplate {
                 }
                 continue;
             }
-            const id = child.name;
             const template = this.registry[id];
-    
             childEl.html(template.html());
-            this.partyMembersByUUID[UUID] = { id, debug: this.debug, nodes: [] };
-    
-            this.loadRecursiveNodesWithParent(child, depth + 1, stack, UUID);
+
+            this.partyMembersByUUID[UUID] = { 
+                id,
+                debug: this.debug,
+                nodes: []
+            };
+            // TODO Passing a new stack like this could get very expensive very fast...
+            this.loadRecursiveNodesWithParent(child, depth + 1, stack.concat([id]), UUID);
         }
     }
 
@@ -77,54 +85,3 @@ export default class ExpandTemplate {
         return this.uuid;
     }
 }
-
-// const partyMembersByUUID = {};
-// var $, UUID = 0;
-
-// export default function generateHtmlFromTemplate(template, registry, debug) {
-//     $ = cheerio.load(template);
-//     const body = $('body')[0];
-//     const head = $('head');
-
-//     head.append(HEADER);
-//     loadRecursiveNodesWithParent(body, registry, debug);
-
-//     const outputHtml = format($.html(), ' '.repeat(4));
-//     return [outputHtml, partyMembersByUUID];
-// }
-
-// // TODO solve infinite recursion (stack?)
-// function loadRecursiveNodesWithParent(parentNode, registry, debug, depth=0, parentUUID) {
-//     if (!$ || depth >= MAX_DEPTH) { 
-//         return; 
-//     }
-//     const children = parentNode.children.filter(el => el.type === 'tag');
-//     for (const child of children) {
-//         const childEl = $(child);
-//         const UUID = nextUUID();
-
-//         childEl.attr('uuid', UUID);
-
-//         if (!(child.name in registry)) {
-//             if (parentUUID !== undefined) {
-//                 partyMembersByUUID[parentUUID].nodes.push(UUID);
-//             }
-//             continue;
-//         }
-//         const id = child.name;
-//         const template = registry[id];
-
-//         childEl.html(template.html());
-//         partyMembersByUUID[UUID] = { id, debug, nodes: [] };
-
-//         loadRecursiveNodesWithParent(child, registry, debug, depth + 1, UUID);
-//     }
-// }
-
-// function nextUUID() {
-//     UUID ++;
-//     if (UUID > MAX_UUID) {
-//         throw new Error('UUID limit reached');
-//     }
-//     return UUID;
-// }
