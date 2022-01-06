@@ -72,8 +72,7 @@ export default class ExpandTemplate {
                 debug: this.debug,
                 nodes: []
             };
-            // TODO Passing a new stack like this could get very expensive very fast...
-            this.loadRecursiveNodesWithParent(child, depth + 1, stack.concat([id]), UUID);
+            this.loadRecursiveNodesWithParent(child, depth + 1, [...stack, id], UUID);
         }
     }
 

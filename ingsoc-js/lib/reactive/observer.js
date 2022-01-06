@@ -1,7 +1,7 @@
 import customProps from './custom-props.json';
 import callbacks from './observer-callbacks';
 
-function Observer(partyMember, cleanDOM) {
+export default function Observer(partyMember, cleanDOM) {
     this.id = partyMember.id;
     this.cleanDOM = cleanDOM;
     this.data = partyMember.clone();
@@ -37,12 +37,11 @@ Observer.prototype.remove = function(observable, observedProperty, node) {
         this.removed[node] = {index, parent};
         parent.removeChild(node);
     } 
-    else {
+    else if (node in this.removed) {
         const removedNode = this.removed[node];
-
-        if (removedNode === undefined) {
-            return;
-        }
+        // if (removedNode === undefined) {
+        //     return;
+        // }
         const parent = removedNode.parent;
         const sibling = parent.childNodes[removedNode.index];
         
@@ -135,5 +134,3 @@ function observeNodeAttr(parentEl, selector, propName, nodeProperty, observable,
         callback(this, observedObject, observedProperty, node, nodeProperty, nodeValue);
     }
 }
-
-export default Observer;

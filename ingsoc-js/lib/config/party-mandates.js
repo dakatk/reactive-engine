@@ -25,21 +25,21 @@ const OPTIONS = {
         type: 'string',
         subtype: 'a javascript source file',
         addRoot: true,
-        validate: (fileName, root) => isFileWithExtension(fileName, root, ['js', 'mjs'])
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['.js', '.mjs'])
     },
     entryTemplatePath: {
         default: 'index.html',
         type: 'string',
         subtype: 'an html file',
         addRoot: true,
-        validate: (fileName, root) => isFileWithExtension(fileName, root, ['html'])
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['.html'])
     },
     entryStylePath: {
         default: 'index.css',
         type: 'string',
         subtype: 'a css file',
         addRoot: true,
-        validate: (fileName, root) => isFileWithExtension(fileName, root, ['css'])
+        validate: (fileName, root) => isFileWithExtension(fileName, root, ['.css'])
     },
     appDirectory: {
         default: 'app',
@@ -74,19 +74,13 @@ function isBooleanValue(value) {
 
 function isVarName(varName) {
     if (varName.match(VAR_NAME_REG) !== null) {
-        return RESERVED_KEYWORDS.indexOf(varName) === -1;
+        return !RESERVED_KEYWORDS.includes(varName);
     }
 }
 
 function isFileWithExtension(fileName, root, exts) {
-    let extFound = false;
-    for (const ext of exts) {
-        if (fileName.endsWith(ext)) {
-            extFound = true;
-            break;
-        }
-    }
-    if (!extFound) {
+    const extName = path.extname(fileName);
+    if (!extName || !exts.includes(extName)) {
         return false;
     }
     const fullFile = path.resolve(root, fileName);
