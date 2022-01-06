@@ -8,10 +8,8 @@ import fs from 'fs';
 
 /**
  * Couresy of https://github.com/michaelrhodes/css-combine, but I decided
- * to translate it into an ES6 class and clean up some things
+ * to translate it for ES6 and clean up some things
  */
-// TODO solve infinite recursion
-// Idea: fill array with filenames, check if filename in array when expanding
 export default class CSSCombine extends Readable {
     constructor(file) {
         super();

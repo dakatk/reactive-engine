@@ -1,6 +1,7 @@
 import cloneDeep from 'clone-deep';
 
-function PartyMember (id, watchers, listeners) {
+// TODO Lifetime functions?
+export default function PartyMember (id, watchers, listeners) {
     this.id = id;
     this.watchers = watchers || {};
     this.listeners = listeners || {};
@@ -13,5 +14,3 @@ PartyMember.prototype.clone = function () {
         listeners: this.listeners
     };
 }
-
-export default PartyMember;
