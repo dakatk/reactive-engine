@@ -13,4 +13,4 @@ function bigBrotherIsWatching(module, components) {
     }
 }
 
-bigBrotherIsWatching(IndexModule, componentsByUUID);
+bigBrotherIsWatching(partyMemberTypes, partyMembersByUUID);

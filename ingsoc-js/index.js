@@ -1,5 +1,4 @@
 #! /usr/bin/env node
-
 import { program } from 'commander';
 import build from './lib/build.js';
 import serve from './lib/serve.js';

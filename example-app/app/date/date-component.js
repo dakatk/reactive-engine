@@ -1,4 +1,4 @@
-import PartyMember from 'ingsoc-js/lib/party-member.js';
+import PartyMember from 'ingsoc-js/party-member';
 
 const DateComponent = new PartyMember('date-component', { date: '2021-02-01' });
 
