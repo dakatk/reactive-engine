@@ -28,16 +28,15 @@ const templateResolveFn = ({html, partyMembersByUUID}, outfile) => {
     return partyMembersByUUID;
 }
 
-function bundleJsModules(minify, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory) {
+async function bundleJsModules(minify, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory) {
     const outfile = path.resolve(outputDirectory, 'bundle.js');
-    build(esbuildOptions(minify, partyMembersByUUID, entryModulePath, entryModuleName, outfile))
-        .catch(() => process.exit(1));
+    await build(esbuildOptions(minify, partyMembersByUUID, entryModulePath, entryModuleName, outfile));
 }
 
-function bundleStyleSheets(entryStylePath, outputDirectory) {
+async function bundleStyleSheets(minify, entryStylePath, rootDirectory, outputDirectory) {
     const outfile = path.resolve(outputDirectory, 'style.css');
-    const combine = new CSSCombine(entryStylePath);
-    combine.pipe(fs.createWriteStream(outfile));
+    const combine = new CSSCombine(entryStylePath, minify, rootDirectory);
+    await combine.writeToStream(fs.createWriteStream(outfile));
 }
 
 async function bundleTemplateToHtml(debug, registry, entryTemplatePath, outputDirectory) {

@@ -1,13 +1,9 @@
 import path from 'path';
 import fs from 'fs';
+import { packageDirectory } from 'pkg-dir';
 
 const MANDATES_FILE = 'mandates.js';
 const OPTIONS = {
-    rootDirectory: {
-        type: 'string',
-        subtype: 'a directory',
-        validate: isDirectory
-    },
     devMode: {
         default: true,
         type: 'boolean',
@@ -88,27 +84,26 @@ function isFileWithExtension(fileName, root, exts) {
 }
 
 function isDirectory(dirName, root) {
-    if (root !== undefined) {
-        if (dirName.trim() === '') {
-            return false;
-        }
-        dirName = path.resolve(root, dirName);
+    if (dirName.trim() in ['', '/', '\\']) {
+        return false;
     }
+    dirName = path.resolve(root, dirName);
     return fs.existsSync(dirName);
 }
 
 async function partyMandates() {
-    const mandatesPath = path.resolve(process.cwd(), MANDATES_FILE);
+    const rootDirectory = await packageDirectory();
+    const mandatesPath = path.resolve(rootDirectory, MANDATES_FILE);
     const { default: mandates } = await import(mandatesPath);
 
     if (!mandates) {
         throw new Error(`Mandates file ("${MANDATES_FILE}") missing from project root directory`);
     }
-    return sanitize(mandates);
+    validateTypes(mandates, rootDirectory);
+    return sanitize(mandates, rootDirectory);
 }
 
-function sanitize(mandates) {
-    validateTypes(mandates);
+function sanitize(mandates, rootDirectory) {
     for (const [key, value] of Object.entries(OPTIONS)) {
         const required = !('default' in value);
         const absent = !(key in mandates);
@@ -120,25 +115,25 @@ function sanitize(mandates) {
             mandates[key] = value.default;
         }
         if (value.addRoot) {
-            const normalizedRoot = path.normalize(mandates.rootDirectory);
-            mandates[key] = path.resolve(normalizedRoot, mandates[key]);
+            mandates[key] = path.resolve(rootDirectory, mandates[key]);
         }
     }
-    return mandates;
+    return {
+        ...mandates,
+        rootDirectory: rootDirectory
+    }
 }
 
-function validateTypes(mandates) {
+function validateTypes(mandates, rootDirectory) {
     for (const [key, value] of Object.entries(mandates)) {
         if (!(key in OPTIONS)) {
             continue;
         }
         const mandate = OPTIONS[key];
-        const root = key === 'rootDirectory' ? undefined : mandates.rootDirectory;
-
         if (typeof(value) !== mandate.type) {
             throw new Error(`Incorrect type for mandate "${key}": expected ${mandate.type}, got ${typeof(value)}`);
         }
-        else if (mandate.validate && !mandate.validate(value, root)) {
+        else if (mandate.validate && !mandate.validate(value, rootDirectory)) {
             throw new Error(`Mandate "${key}" couldn't be validated as ${mandate.subtype}`);
         }
     }

@@ -2,23 +2,24 @@ import createRegistry from './build-system/registrar.js';
 import Bundler from './build-system/bundler.js';
 import PartyMandates from './config/party-mandates.js';
 
+const onError = err => {
+    console.error(err.toString());
+    process.exit(1);
+}
+
 export default function build() {
     PartyMandates.mandates
         .then(mandates => {
             createRegistry(mandates.appDirectory, registry => {
-                generatePublicFiles(registry, mandates);
+                generatePublicFiles(registry, mandates)
+                    .catch(onError)
             })
         })
-        .catch(err => {
-            console.error(err);
-            process.exit(1);
-        });
+        .catch(onError);
 }
 
-function generatePublicFiles(registry, {devMode, entryModulePath, entryStylePath, entryTemplatePath, entryModuleName, outputDirectory}) {
-    Bundler.bundleTemplateToHtml(devMode, registry, entryTemplatePath, outputDirectory)
-        .then(partyMembersByUUID => {
-            Bundler.bundleJsModules(!devMode, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory);
-            Bundler.bundleStyleSheets(entryStylePath, outputDirectory);
-        });
+async function generatePublicFiles(registry, {devMode, entryModulePath, entryStylePath, entryTemplatePath, entryModuleName, rootDirectory, outputDirectory}) {
+    const partyMembersByUUID = await Bundler.bundleTemplateToHtml(devMode, registry, entryTemplatePath, outputDirectory);
+    await Bundler.bundleJsModules(!devMode, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory);
+    await Bundler.bundleStyleSheets(!devMode, entryStylePath, rootDirectory, outputDirectory);
 }
