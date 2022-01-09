@@ -11,28 +11,45 @@ import fs from 'fs';
  * to translate it for ES6 and clean up some things
  */
 export default class CSSCombine extends Readable {
-    constructor(file) {
+    constructor(file, minify, rootDirectory) {
         super();
         Readable.call(this);
 
-        this.file = path.normalize(file);
+        this.rootDirectory = rootDirectory;
+        this.minify = minify;
+        this.file = file;
         this.busy = false;
+
+        this.stringifyOptions = {
+            selectorSeparator: minify ? ',' : ',\n',
+            cssStringifyOptions: minify ? { 
+                indent: '',
+                compress: true
+            } : undefined
+        };
+    }
+
+    async writeToStream(stream) {
+        return new Promise(resolve => {
+            this.pipe(stream);
+            resolve();
+        });
     }
 
     _read() {
-        const self = this;
-        if (self.busy) {
+        if (this.busy) {
             return;
         }
-        self.busy = true;
+        this.busy = true;
 
-        const entrypoint = path.resolve(self.file);
-        read(entrypoint)
-            .on('error', error => self.emit(error.message))
+        const entryPoint = path.resolve(this.file);
+        read(entryPoint)
+            .on('error', error => this.emit(error.message))
             .pipe(concat(content => {
-                parse(entrypoint, content, () => self.push(null));
+                parse(entryPoint, content, () => super.push(null));
             }));
 
+        const self = this;
         function parse(filename, content, callback, stack=[]) {
             if (!content) {
                 callback();
@@ -41,26 +58,25 @@ export default class CSSCombine extends Readable {
             const rules = css.parse(content.toString())
                 .stylesheet
                 .rules;
-
             const len = rules.length;
             if (!len) {
                 callback();
                 return;
             }
             let i = 0;
-
             (function loop() {
                 const rule = rules[i];
                 if (rule.type == 'import') {
                     const separatorReg = /^[^\/\\]/;
                     let file = extract(rule.import);
 
+                    // TODO no need to resolve URLs
                     if (!isURL(file) && separatorReg.test(file)) {
                         const dir = path.dirname(filename);
-                        file = path.normalize(path.resolve(dir, file));
+                        file = path.resolve(dir, file);
                     }
                     else if (separatorReg.test(file)) {
-                        file = path.normalize(path.join(process.cwd(), file));
+                        file = path.resolve(self.rootDirectory, file);
                     }
                     if (!path.extname(file)) {
                         file += '.css';
@@ -74,37 +90,52 @@ export default class CSSCombine extends Readable {
                             parse(file, content, next, [...stack, file]);
                         }));
                 }
-                else if (rule.declarations && !rule.declarations.length) {
-                    self.push(rule.selectors.join(',\n') + ' {}\n');
-                    next();
-                }
                 else {
-                    const cssText = css.stringify({
-                        stylesheet: {
-                            rules: [rule]
-                        }
-                    });
-                    self.push(cssText.trim() + '\n');
+                    self.push(self.stringify(rule));
                     next();
                 }
 
                 function next() {
-                    (++i < len) ? loop() : callback()
+                    (++i < len) ? loop() : callback();
                 }
             })();
         }
     }
+
+    stringify(rule) {
+        if (rule.declarations && !rule.declarations.length) {
+            return rule.selectors.join(
+                this.stringifyOptions.selectorSeparator
+            ) + '{}';
+        }
+        else {
+            return css.stringify({
+                stylesheet: {
+                    rules: [rule]
+                }
+            }, 
+            this.stringifyOptions.cssStringifyOptions)
+            .trim();
+        }
+    }
+
+    push(text) {
+        if (!this.minify) {
+            text += '\n';
+        }
+        super.push(text);
+    }
 }
 
 function extract(rule) {
-  return rule
-    .replace(/^url\(/, '')
-    .replace(/'|"/g, '')
-    .replace(/\)\s*$/, '');
+    return rule
+        .replace(/^url\(/, '')
+        .replace(/'|"/g, '')
+        .replace(/\)\s*$/, '');
 }
 
 function read(file) {
-  return !isURL(file) ?
-    fs.createReadStream(file) :
-    hyperquest(file);
+    return !isURL(file) ?
+        fs.createReadStream(file) :
+        hyperquest(file);
 }

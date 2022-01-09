@@ -1,47 +1,45 @@
-import customProps from './custom-props.json';
-import callbacks from './observer-callbacks';
+import customProps from './thoughtcrime.js';
+import callbacks from './thinkpol-callbacks.js';
 
-export default function Observer(partyMember, cleanDOM) {
+export default function ThoughtPolice(partyMember, cleanDOM) {
     this.id = partyMember.id;
     this.cleanDOM = cleanDOM;
     this.data = partyMember.clone();
     
     this.signals = {};
     this.removed = {};
+    this.parent = undefined;
 }
 
-Observer.prototype.setup = function(parentEl, childUUIDs) {
+ThoughtPolice.prototype.setup = function(parentEl, childUUIDs) {
     connectObservableProperties.call(this, this.data.watchers);
     parseDOM.call(this, parentEl, childUUIDs, this.personnelDetails());
 }
 
-Observer.prototype.watch = function(property, signalHandler) {
+ThoughtPolice.prototype.watch = function(property, signalHandler) {
     if (!this.signals[property]) {
         this.signals[property] = [];
     }
     this.signals[property].push(signalHandler);
 }
 
-Observer.prototype.notify = function(signal) {
+ThoughtPolice.prototype.notify = function(signal) {
     if (!this.signals[signal] || this.signals[signal].length < 1) {
         return;
     }
     this.signals[signal].forEach((signalHandler) => signalHandler.call());
 }
 
-Observer.prototype.remove = function(observable, observedProperty, node) {
+ThoughtPolice.prototype.unperson = function(observable, observedProperty, node) {
     if (!observable[observedProperty]) {
         const parent = node.parentNode;
         const index = Array.from(parent.children).indexOf(node);
 
         this.removed[node] = {index, parent};
         parent.removeChild(node);
-    } 
+    }
     else if (node in this.removed) {
         const removedNode = this.removed[node];
-        // if (removedNode === undefined) {
-        //     return;
-        // }
         const parent = removedNode.parent;
         const sibling = parent.childNodes[removedNode.index];
         
@@ -49,12 +47,16 @@ Observer.prototype.remove = function(observable, observedProperty, node) {
     }
 }
 
-Observer.prototype.personnelDetails = function() {
-    return {
+ThoughtPolice.prototype.personnelDetails = function(includeParent = true) {
+    const detailsObj = {
         id: this.id,
         watchers: this.data.watchers,
         listeners: this.data.listeners
     };
+    if (includeParent) {
+        detailsObj.parent = this.parent ? this.parent.personnelDetails(false) : undefined
+    }
+    return detailsObj;
 }
 
 function connectObservableProperties(obj, prefix) {
@@ -105,12 +107,10 @@ function parseDOM(parentEl, childUUIDs, data) {
 }
 
 function observeNodeAttr(parentEl, selector, propName, nodeProperty, observable, callback) {
-    let nodes;
-    try {
-        nodes = parentEl.querySelectorAll(selector);
-    } catch {
+    if (!selector) {
         return;
     }
+    const nodes = parentEl.querySelectorAll(selector);
 
     for (const node of nodes) {
         const nodeValue = node.attributes[propName].value;

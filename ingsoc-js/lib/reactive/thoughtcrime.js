@@ -1,4 +1,4 @@
-{
+export default {
     "interpolate-for": {
         "existingProperty": null,
         "child": "watchers",
@@ -51,4 +51,4 @@
         "existingProperty": "change",
         "callback": "listenToNode"
     }
-}
+};

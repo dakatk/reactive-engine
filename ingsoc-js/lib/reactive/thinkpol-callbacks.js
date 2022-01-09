@@ -1,5 +1,5 @@
 const callbacks = {
-    interpolateForNode: function(observer, observable, observedProperty, node) {
+    interpolateForNode: function(thinkpol, observable, observedProperty, node) {
         const parent = node.parentNode;
         const observedObject = observable[observedProperty];
     
@@ -18,27 +18,28 @@ const callbacks = {
             }
             parent.insertBefore(newNode, node);
     
-            if (observer.cleanDOM) {
+            if (thinkpol.cleanDOM) {
                 newNode.removeAttribute('interpolate-for');
             }
         }
         parent.removeChild(node);
     },
-    viewIfNode: function(observer, observable, observedProperty, node, _, watchKey) {
-        observer.remove(observable, observedProperty, node);
-        observer.watch(watchKey, () => observer.remove(observable, observedProperty, node));
+    viewIfNode: function(thinkpol, observable, observedProperty, node, _, watchKey) {
+        thinkpol.unperson(observable, observedProperty, node);
+        thinkpol.watch(watchKey, () => thinkpol.unperson(observable, observedProperty, node));
     },
-    watchNode: function(observer, observable, observedProperty, node, nodeProperty, watchKey) {
+    watchNode: function(thinkpol, observable, observedProperty, node, nodeProperty, watchKey) {
         node[nodeProperty] = observable[observedProperty];
-        observer.watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
+        thinkpol.watch(watchKey, () => node[nodeProperty] = observable[observedProperty]);
     },
-    listenToNode: function(_, observable, observedProperty, node, eventName) {
+    listenToNode: function(thinkpol, observable, observedProperty, node, eventName) {
         node.addEventListener(eventName, event => {
             if (observable.listeners[observedProperty] === undefined) {
                 observable.watchers[observedProperty] = event.target.value;
             }
             else {
-                observable.listeners[observedProperty].call(observable, event);
+                // TODO nothing actually, just watch for this particular line to break...
+                observable.listeners[observedProperty].call(thinkpol.personnelDetails(), event);
             }
         }, true);
     }

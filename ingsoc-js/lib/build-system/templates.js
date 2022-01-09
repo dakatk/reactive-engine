@@ -42,20 +42,23 @@ export default class ExpandTemplate {
         return format(this.$.html(), ' '.repeat(4));
     }
 
-    loadRecursiveNodesWithParent(parentNode, depth=0, stack=[], parentUUID) {
+    loadRecursiveNodesWithParent(parentNode, depth=0, parentUUID) {
         if (!this.$ || depth >= MAX_DEPTH) { 
             return; 
         }
         const children = parentNode.children.filter(el => el.type === 'tag');
         for (const child of children) {
             const id = child.name;
-            if (stack.includes(id)) {
-                console.error(`Infinite recursion found at ${id}, aborting generation for ${parentNode.name}`);
+            if (this.isExistingParent(id, parentUUID)) {
+                if (this.debug) {
+                    console.error(
+                        `Warning: "${parentNode.name}" creates infinite recursion in "${id}"`
+                    );
+                }
                 continue;
             }
             const childEl = this.$(child);
             const UUID = this.nextUUID();
-    
             childEl.attr('uuid', UUID);
     
             if (!(child.name in this.registry)) {
@@ -65,15 +68,31 @@ export default class ExpandTemplate {
                 continue;
             }
             const template = this.registry[id];
+            const debug = this.debug;
             childEl.html(template.html());
 
             this.partyMembersByUUID[UUID] = { 
                 id,
-                debug: this.debug,
+                parentUUID,
+                debug,
                 nodes: []
             };
-            this.loadRecursiveNodesWithParent(child, depth + 1, [...stack, id], UUID);
+            this.loadRecursiveNodesWithParent(child, depth + 1, UUID);
         }
+    }
+
+    isExistingParent(id, parentUUID) {
+        if (parentUUID === undefined) {
+            return false;
+        }
+        const firstParent = this.partyMembersByUUID[parentUUID];
+        for (let parent = firstParent; parentUUID !== undefined; parent = this.partyMembersByUUID[parentUUID]) {
+            if (id === parent.id) {
+                return true;
+            }
+            parentUUID = parent.parentUUID;
+        }
+        return false;
     }
 
     nextUUID() {
