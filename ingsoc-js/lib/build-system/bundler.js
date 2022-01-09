@@ -1,4 +1,4 @@
-import { build } from 'esbuild';
+import esbuild from 'esbuild';
 import CSSCombine from './styles.js';
 import ExpandTemplate from './templates.js';
 import path from 'path';
@@ -14,6 +14,7 @@ const esbuildOptions = (minify, partyMembersByUUID, entryModulePath, entryModule
         },
         bundle: true,
         platform: 'node',
+        target: 'es6',
         outfile,
         minify
     };
@@ -28,20 +29,22 @@ const templateResolveFn = ({html, partyMembersByUUID}, outfile) => {
     return partyMembersByUUID;
 }
 
-async function bundleJsModules(minify, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory) {
+async function bundleJsModules(partyMembersByUUID, {devMode, entryModulePath, entryModuleName, outputDirectory}) {
     const outfile = path.resolve(outputDirectory, 'bundle.js');
-    await build(esbuildOptions(minify, partyMembersByUUID, entryModulePath, entryModuleName, outfile));
+    await esbuild.build(
+        esbuildOptions(!devMode, partyMembersByUUID, entryModulePath, entryModuleName, outfile)
+    );
 }
 
-async function bundleStyleSheets(minify, entryStylePath, rootDirectory, outputDirectory) {
+async function bundleStyleSheets({entryStylePath, devMode, rootDirectory, outputDirectory}) {
     const outfile = path.resolve(outputDirectory, 'style.css');
-    const combine = new CSSCombine(entryStylePath, minify, rootDirectory);
+    const combine = new CSSCombine(entryStylePath, !devMode, rootDirectory);
     await combine.writeToStream(fs.createWriteStream(outfile));
 }
 
-async function bundleTemplateToHtml(debug, registry, entryTemplatePath, outputDirectory) {
+async function bundleTemplateToHtml(registry, {entryTemplatePath, devMode, outputDirectory}) {
     const outfile = path.resolve(outputDirectory, 'index.html');
-    const template = new ExpandTemplate(entryTemplatePath, registry, debug);
+    const template = new ExpandTemplate(entryTemplatePath, registry, devMode);
     return await template.expandToHTML()
         .then(value => templateResolveFn(value, outfile));
 }

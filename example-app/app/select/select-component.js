@@ -8,6 +8,7 @@ const SelectComponent = new PartyMember(
     {
         updateText: function(event) {
             this.watchers.text[0] = event.target.value;
+            console.log(this.parent.watchers.message);
         }
     });
 

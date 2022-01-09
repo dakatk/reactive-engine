@@ -18,8 +18,8 @@ export default function build() {
         .catch(onError);
 }
 
-async function generatePublicFiles(registry, {devMode, entryModulePath, entryStylePath, entryTemplatePath, entryModuleName, rootDirectory, outputDirectory}) {
-    const partyMembersByUUID = await Bundler.bundleTemplateToHtml(devMode, registry, entryTemplatePath, outputDirectory);
-    await Bundler.bundleJsModules(!devMode, partyMembersByUUID, entryModulePath, entryModuleName, outputDirectory);
-    await Bundler.bundleStyleSheets(!devMode, entryStylePath, rootDirectory, outputDirectory);
+async function generatePublicFiles(registry, mandates) {
+    const partyMembersByUUID = await Bundler.bundleTemplateToHtml(registry, mandates);
+    await Bundler.bundleJsModules(partyMembersByUUID, mandates);
+    await Bundler.bundleStyleSheets(mandates);
 }
