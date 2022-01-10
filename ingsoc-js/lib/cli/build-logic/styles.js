@@ -1,4 +1,3 @@
-import hyperquest from 'hyperquest';
 import concat from 'concat-stream';
 import css from 'css';
 import { Readable } from 'stream';
@@ -43,7 +42,7 @@ export default class CSSCombine extends Readable {
         this.busy = true;
 
         const entryPoint = path.resolve(this.file);
-        read(entryPoint)
+        fs.createReadStream(entryPoint)
             .on('error', error => this.emit(error.message))
             .pipe(concat(content => {
                 parse(entryPoint, content, () => super.push(null));
@@ -66,29 +65,34 @@ export default class CSSCombine extends Readable {
             let i = 0;
             (function loop() {
                 const rule = rules[i];
-                if (rule.type == 'import') {
+                if (rule.type === 'import') {
                     const separatorReg = /^[^\/\\]/;
                     let file = extract(rule.import);
 
-                    // TODO no need to resolve URLs
-                    if (!isURL(file) && separatorReg.test(file)) {
-                        const dir = path.dirname(filename);
-                        file = path.resolve(dir, file);
+                    if (isURL(file)) {
+                        self.push(self.stringify(rule));
+                        next();
                     }
-                    else if (separatorReg.test(file)) {
-                        file = path.resolve(self.rootDirectory, file);
+                    else {
+                        if (separatorReg.test(file)) {
+                            const dir = path.dirname(filename);
+                            file = path.resolve(dir, file);
+                        }
+                        else {
+                            file = path.resolve(self.rootDirectory, file.substring(1));
+                        }
+                        if (!path.extname(file)) {
+                            file += '.css';
+                        }
+                        if (stack.includes(file)) {
+                            console.error(`Infinite recursion found for file "${file}"`);
+                        }
+                        fs.createReadStream(file)
+                            .on('error', error => self.emit(error.message))
+                            .pipe(concat(content => {
+                                parse(file, content, next, [...stack, file]);
+                            }));
                     }
-                    if (!path.extname(file)) {
-                        file += '.css';
-                    }
-                    if (stack.includes(file)) {
-                        console.error(`Infinite recursion found for file "${file}"`);
-                    }
-                    read(file)
-                        .on('error', error => self.emit(error.message))
-                        .pipe(concat(content => {
-                            parse(file, content, next, [...stack, file]);
-                        }));
                 }
                 else {
                     self.push(self.stringify(rule));
@@ -132,10 +136,4 @@ function extract(rule) {
         .replace(/^url\(/, '')
         .replace(/'|"/g, '')
         .replace(/\)\s*$/, '');
-}
-
-function read(file) {
-    return !isURL(file) ?
-        fs.createReadStream(file) :
-        hyperquest(file);
 }

@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { packageDirectory } from 'pkg-dir';
 
+// TODO static directory? 
 const MANDATES_FILE = 'mandates.js';
 const OPTIONS = {
     devMode: {
