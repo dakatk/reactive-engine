@@ -6,7 +6,7 @@ import fs from 'fs';
 
 const esbuildOptions = (minify, partyMembersByUUID, entryModulePath, entryModuleName, outfile) => {
     return {
-        entryPoints: ['ingsoc-js/lib/reactive/ingsoc.js'],
+        entryPoints: ['ingsoc-js/lib/newspeak/ingsoc.js'],
         inject: [entryModulePath],
         define: {
             'partyMembersByUUID': JSON.stringify(partyMembersByUUID),

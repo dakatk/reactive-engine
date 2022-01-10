@@ -1,6 +1,6 @@
-import createRegistry from './build-system/registrar.js';
-import Bundler from './build-system/bundler.js';
-import PartyMandates from './config/party-mandates.js';
+import createRegistry from './build-logic/registrar.js';
+import Bundler from './build-logic/bundler.js';
+import PartyMandates from '../config/party-mandates.js';
 
 const onError = err => {
     console.error(err.toString());

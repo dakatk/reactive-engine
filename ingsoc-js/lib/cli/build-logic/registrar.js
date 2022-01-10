@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
-import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
+import fs from 'fs';
 
 export default function createRegistry(appDirectory, callback) {
     const htmlPaths = path.resolve(appDirectory, '**/*.html');
