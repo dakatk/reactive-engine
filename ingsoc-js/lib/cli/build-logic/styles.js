@@ -66,24 +66,13 @@ export default class CSSCombine extends Readable {
             (function loop() {
                 const rule = rules[i];
                 if (rule.type === 'import') {
-                    const separatorReg = /^[^\/\\]/;
                     let file = extract(rule.import);
-
                     if (isURL(file)) {
                         self.push(self.stringify(rule));
                         next();
                     }
                     else {
-                        if (separatorReg.test(file)) {
-                            const dir = path.dirname(filename);
-                            file = path.resolve(dir, file);
-                        }
-                        else {
-                            file = path.resolve(self.rootDirectory, file.substring(1));
-                        }
-                        if (!path.extname(file)) {
-                            file += '.css';
-                        }
+                        file = self.resolveFilePath(file, filename);
                         if (stack.includes(file)) {
                             console.error(`Infinite recursion found for file "${file}"`);
                         }
@@ -104,6 +93,21 @@ export default class CSSCombine extends Readable {
                 }
             })();
         }
+    }
+
+    resolveFilePath(importFile, currentFile) {
+        const separatorReg = /^[^\/\\]/;
+        if (separatorReg.test(file)) {
+            const dir = path.dirname(currentFile);
+            importFile = path.resolve(dir, importFile);
+        }
+        else {
+            importFile = path.resolve(this.rootDirectory, importFile.substring(1));
+        }
+        if (!path.extname(importFile)) {
+            importFile += '.css';
+        }
+        return importFile;
     }
 
     stringify(rule) {

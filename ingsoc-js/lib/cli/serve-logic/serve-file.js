@@ -9,13 +9,19 @@ const CONTENT_TYPE = {
     '.ico': 'image/x-icon'
 };
 
-export default function serveFile({url}, res, directory) {
+const PUBLIC_FILES = ['index.html', 'bundle.js', 'style.css'];
+
+export default function serveFile({url}, res, {outputDirectory, staticDirectory}) {
     if (url === '/') {
         url = 'index.html';
     }
     if (url.charAt(0) === '/') {
         url = url.substring(1);
     }
+    const directory = PUBLIC_FILES.includes(url) ?
+        outputDirectory :
+        staticDirectory;
+
     const extName = path.extname(url);
     const contentType = CONTENT_TYPE[extName];
     if (!contentType) {

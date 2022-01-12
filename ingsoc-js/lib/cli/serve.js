@@ -7,9 +7,8 @@ const DEFAULT_PORT = 3000;
 export default function serve({port}) {
     PartyMandates.mandates
         .then(mandates => {
-            const outputDirectory = mandates.outputDirectory;
             const server = http.createServer((req, res) => {
-                serveFile(req, res, outputDirectory);
+                serveFile(req, res, mandates);
             });
             server.listen(port || DEFAULT_PORT);
         })
