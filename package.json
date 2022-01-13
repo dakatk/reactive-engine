@@ -9,6 +9,6 @@
   "author": "Dusten Knull",
   "license": "ISC",
   "dependencies": {
-    "ingsoc-js": "file:../ingsoc-js"
+    "ingsoc-js": "git+https://github.com/dakatk/reactive-engine.git"
   }
 }
