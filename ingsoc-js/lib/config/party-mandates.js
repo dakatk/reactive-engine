@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 import { packageDirectory } from 'pkg-dir';
 
-// TODO static directory? 
 const MANDATES_FILE = 'mandates.js';
 const OPTIONS = {
     devMode: {
@@ -52,6 +51,13 @@ const OPTIONS = {
         addRoot: true,
         validate: isDirectory
     },
+    staticDirectory: {
+        default: 'static',
+        type: 'string',
+        subtype: 'a non-root directory',
+        addRoot: true,
+        validate: isDirectory
+    }
 };
 
 const VAR_NAME_REG = /^[a-zA-Z_$][a-zA-Z_$0-9]*$/;
@@ -141,6 +147,12 @@ function validateTypes(mandates, rootDirectory) {
 
     if (mandates.outputDirectory === mandates.appDirectory) {
         throw new Error('"outputDirectory" cannot have the same value as "appDirectory"');
+    }
+    if (mandates.staticDirectory === mandates.appDirectory) {
+        throw new Error('"staticDirectory" cannot have the same value as "appDirectory"');
+    }
+    if (mandates.staticDirectory === mandates.outputDirectory) {
+        throw new Error('"staticDirectory" cannot have the same value as "outputDirectory"');
     }
 }
 

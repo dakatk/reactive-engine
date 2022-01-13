@@ -5,5 +5,6 @@ module.exports = {
     entryStylePath: 'index.css',
     entryTemplatePath: 'index.html',
     appDirectory: 'app',
-    outputDirectory: 'public'
+    outputDirectory: 'public',
+    staticDirectory: 'static'
 }

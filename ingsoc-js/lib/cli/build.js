@@ -7,15 +7,17 @@ const onError = err => {
     process.exit(1);
 }
 
-export default function build() {
+export function build() {
     PartyMandates.mandates
-        .then(mandates => {
-            createRegistry(mandates.appDirectory, registry => {
-                generatePublicFiles(registry, mandates)
-                    .catch(onError)
-            })
-        })
+        .then(buildWithMandates)
         .catch(onError);
+}
+
+export function buildWithMandates(mandates) {
+    createRegistry(mandates.appDirectory, registry => {
+        generatePublicFiles(registry, mandates)
+            .catch(onError);
+    });
 }
 
 async function generatePublicFiles(registry, mandates) {

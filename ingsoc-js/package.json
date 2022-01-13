@@ -31,6 +31,7 @@
   "homepage": "https://github.com/dakatk/reactive-engine#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
+    "chokidar": "^3.5.2",
     "clone-deep": "^4.0.1",
     "commander": "^8.3.0",
     "concat-stream": "^2.0.0",
@@ -39,6 +40,7 @@
     "glob": "^7.2.0",
     "html-format": "^1.0.1",
     "is-url": "^1.2.4",
+    "js-tokens": "^7.0.0",
     "pkg-dir": "^6.0.1"
   }
 }

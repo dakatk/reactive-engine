@@ -1,8 +1,23 @@
 import esbuild from 'esbuild';
 import CSSCombine from './styles.js';
+import jsTokens from 'js-tokens';
 import ExpandTemplate from './templates.js';
 import path from 'path';
 import fs from 'fs';
+
+// const plugin = (options = {}) => ({
+//     name: 'back-to-var',
+//     setup(build) {
+//         const { filter = /.*/, namespace = '' } = options;
+//         build.onLoad({ filter, namespace }, async args => {
+//             const contents = await fs.promises.readFile(args.path, 'utf8');
+//             return new Promise(resolve => {
+//                 console.log(Array.from(jsTokens(contents)));
+//                 resolve({ contents });
+//             });
+//         });
+//     }
+// });
 
 const esbuildOptions = (minify, partyMembersByUUID, entryModulePath, entryModuleName, outfile) => {
     return {
@@ -15,6 +30,7 @@ const esbuildOptions = (minify, partyMembersByUUID, entryModulePath, entryModule
         bundle: true,
         platform: 'node',
         target: 'es6',
+        // plugins: [plugin()],
         outfile,
         minify
     };
