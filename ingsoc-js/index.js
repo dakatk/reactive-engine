@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import { program } from 'commander';
-import build from './lib/cli//build.js';
+import { build } from './lib/cli//build.js';
 import serve from './lib/cli/serve.js';
 
 program.version('1.0.0');

@@ -97,7 +97,7 @@ export default class CSSCombine extends Readable {
 
     resolveFilePath(importFile, currentFile) {
         const separatorReg = /^[^\/\\]/;
-        if (separatorReg.test(file)) {
+        if (separatorReg.test(importFile)) {
             const dir = path.dirname(currentFile);
             importFile = path.resolve(dir, importFile);
         }
