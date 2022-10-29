@@ -1,6 +1,6 @@
 "use strict";
 
-const BigBrother = (function () {
+const BigBrother = (() => {
     const registry = {};
     const templatesById = {};
     const customProps = {
@@ -129,8 +129,8 @@ const BigBrother = (function () {
 
             this.signals = {};
             this.removed = {};
-            this.parent = undefined;
             this.children = {};
+            this.parent = undefined;
         }
 
         setup(parentEl, nodeUUIDs, childUUIDs) {
