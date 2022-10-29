@@ -1,0 +1,22 @@
+.bottom-space {
+    display: block;
+    margin-bottom: 1em;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+#bg-cyan {
+    background-color: darkcyan;
+    margin-top: 0em;
+}
+
+#bg-yellow {
+    background-color: yellow;
+    margin-top: 0em;
+}
